@@ -20,7 +20,7 @@ namespace Storage
                 using (var command = new SQLiteCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", loan.ID);
-                    command.Parameters.AddWithValue("@days_to_expire", loan.days_to_expire);
+                    command.Parameters.AddWithValue("@days_to_expire", loan.Days_to_expire);
                     command.Parameters.AddWithValue("@CLientID", loan.ClientID);
                     command.Parameters.AddWithValue("@InventoryID", loan.InventoryID);
 
@@ -50,7 +50,7 @@ namespace Storage
                         var loan = new Loan
                         {
                             ID = Guid.Parse(reader["Id"].ToString() ?? Guid.Empty.ToString()),
-                            days_to_expire = Convert.ToInt32(reader["days_to_expire"]),
+                            Days_to_expire = Convert.ToInt32(reader["days_to_expire"]),
                             ClientID = Guid.Parse(reader["ClientID"].ToString() ?? Guid.Empty.ToString()),
                             InventoryID = Guid.Parse(reader["InventoryID"].ToString() ?? Guid.Empty.ToString()),
 
@@ -87,7 +87,7 @@ namespace Storage
                         {
                             ID = Guid.Parse(reader["Id"].ToString() ?? Guid.Empty.ToString()),
                             // convertendo ID do banco de TEXT para tipo string e verificando se está NULL
-                            days_to_expire = Convert.ToInt32(reader["days_to_expire"]),
+                            Days_to_expire = Convert.ToInt32(reader["days_to_expire"]),
                             ClientID = Guid.Parse(reader["ClientID"].ToString() ?? Guid.Empty.ToString()),
                             InventoryID = Guid.Parse(reader["InventoryID"].ToString() ?? Guid.Empty.ToString()),
 
@@ -118,7 +118,7 @@ namespace Storage
                 using (var command = new SQLiteCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@ID", loan.ID);
-                    command.Parameters.AddWithValue("@days_to_expire", loan.days_to_expire);
+                    command.Parameters.AddWithValue("@days_to_expire", loan.Days_to_expire);
                     command.Parameters.AddWithValue("@ClientID", loan.ClientID);
                     command.Parameters.AddWithValue("@InventoryID", loan.InventoryID);
                     command.Parameters.AddWithValue("@UpdatedAt", DateTime.Now);

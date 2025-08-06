@@ -31,23 +31,22 @@ namespace Service
 
             if (loan == null)
             {
-                Console.WriteLine("Empréstimo não encontrado.");
+                Console.WriteLine("Catálogo não encontrado.");
                 return null;
             }
 
             return loan;
         }
 
-        public void Create(Guid clientID, Guid inventoryID, int? days_to_expire = null)
+        public void Create(Guid clientID, Guid inventoryID, int days_to_expire)
         {
             var loan = new Loan
             {
                 ID = Guid.NewGuid(),
                 ClientID = clientID,
                 InventoryID = inventoryID,
-                Days_to_expire = days_to_expire ?? 30,
                 CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
+                Days_to_expire = days_to_expire
             };
 
             loan.ReturnAt = loan.CreatedAt.AddDays(loan.Days_to_expire);
@@ -56,7 +55,27 @@ namespace Service
             Console.WriteLine("Empréstimo criado com sucesso!");
         }
 
-        public void Update(Guid ID, Guid clientID, Guid inventoryID, int days_to_expire, DateTime? returnAt = null)
+        public void Update(Guid ID, Guid clientID, Guid inventoryID, int days_to_expire)
+        {
+            var existingloan = _loanRepository.GetById(ID);
+            if (existingloan == null)
+            {
+                Console.WriteLine("Empréstimo não encontrado.");
+                return;
+            }
+
+            existingloan.ID = ID;
+            existingloan.ClientID = clientID;
+            existingloan.InventoryID = inventoryID;
+            existingloan.Days_to_expire = days_to_expire;
+
+            existingloan.UpdatedAt = DateTime.Now;
+
+            _loanRepository.Update(existingloan);
+            Console.WriteLine("Empréstimo atualizado com sucesso!");
+        }
+
+        public void Delete(Guid ID)
         {
             var existingLoan = _loanRepository.GetById(ID);
             if (existingLoan == null)
@@ -65,9 +84,8 @@ namespace Service
                 return;
             }
 
-            existingLoan.ClientID = clientID;
-            existingLoan.InventoryID = inventoryID;
-            existingLoan.Days
+            _loanRepository.Delete(ID);
+            Console.WriteLine("Empréstimo removido com sucesso!");
         }
     }
 }
