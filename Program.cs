@@ -43,26 +43,6 @@
 //     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 // }
 
-//TESTE DOMAIN
-// using Domain;
-
-// class Program
-// {
-//     static void Main()
-//     {
-//         var livro = new Catalog
-//         {
-//             ID = Guid.NewGuid(),
-//             Title = "Livro de Teste",
-//             Author = "Letícia",
-//             Number_pages = 150,
-//             Year = 2025,
-//             Description = "Violet"
-//         };
-
-//         Console.WriteLine($"{livro.ID} - {livro.Title} ({livro.Author}, {livro.Number_pages} {livro.Year} {livro.Description})");
-//     }
-// }
 
 using Storage;
 using Domain;
@@ -71,28 +51,23 @@ class Program
 {
     static void Main()
     {
-        var repo = new CatalogRepository();
+        var repo = new GenreRepository();
 
-        var novoLivro = new Catalog
+        var novoGênero = new Genre
         {
             ID = Guid.NewGuid(),
-            Title = "Outro Teste",
-            Author = "Letícia",
-            Number_pages = 229293,
-            Year = 2025,
-            Description = "SAIU MDSSSS!!!!",
-            Publisher_ID = 1,
-            Language_ID = "Português"
+            Name_genre = "Ação",
+            
             
         };
 
-        repo.Add(novoLivro);
+        repo.Add(novoGênero);
         Console.WriteLine("Livro salvo no banco!");
 
         var livros = repo.GetAll();
         foreach (var l in livros)
         {
-            Console.WriteLine($"{l.ID} - {l.Title} - {l.Author} - {l.Number_pages} - {l.Year} - {l.Description} - {l.Publisher_ID} - {l.Language_ID}");
+            Console.WriteLine($"{l.ID} - {l.Name_genre}");
         }
     }
 }

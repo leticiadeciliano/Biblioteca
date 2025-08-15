@@ -13,7 +13,6 @@ namespace Domain
         public required string Description { get; set; }
         public required int Publisher_ID { get; set; }
         public required string Language_ID { get; set; }
-        public bool is_foreign;
 
         public DateTime Created_At { get; set; } = DateTime.Now;
         public DateTime Updated_At { get; set; } = DateTime.Now;

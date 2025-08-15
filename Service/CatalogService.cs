@@ -46,7 +46,7 @@ namespace Service
 
         //Created_At e Updated_At não entram como parâmetro por não ser necessário o Usuário 
         // definir a criação e atualização dos dados
-        public void Create(string title, string author, int number_pages, int year, string description, int publisher_Id, string language_Id, bool is_foreign)
+        public void Create(string title, string author, int number_pages, int year, string description, int publisher_Id, string language_Id)
         {
             var catalog = new Catalog
             {
@@ -57,7 +57,6 @@ namespace Service
                 Description = description,
                 Publisher_ID = publisher_Id,
                 Language_ID = language_Id,
-                is_foreign = is_foreign,
 
                 Created_At = DateTime.Now,
                 Updated_At = DateTime.Now
@@ -83,7 +82,6 @@ namespace Service
             existingCatalog.Description = description;
             existingCatalog.Publisher_ID = publisher_Id;
             existingCatalog.Language_ID = language_Id;
-            existingCatalog.is_foreign = is_foreign;
 
             existingCatalog.Updated_At = DateTime.Now;
 

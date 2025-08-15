@@ -1,18 +1,17 @@
 using System;
 using Domain;
+using Storage;
 using System.Data.SQLite;
-using System.Collections.Generic;
+using System.Data.Entity;
 
 namespace Storage
 {
     public class ClientRepository
     {
-        private string _connectionString = "Data Source=biblioteca.db";
-
         //Classe Adicionar 
         public void Add(Client client)
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var connection = Database.GetConnection();
             {
                 connection.Open();
 

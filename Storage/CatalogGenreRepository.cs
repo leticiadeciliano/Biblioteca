@@ -7,7 +7,7 @@ namespace Storage
 {
     public class CatalogGenreRepository
     {
-        private string _connectionString = "Data Source=biblioteca.db";
+        private string _connectionString = "Data Source=/home/dev/Biblioteca/Storage/Data/biblioteca.db";
         public void Add(CatalogGenre item)
         {
             using (var connection = new SQLiteConnection(_connectionString))

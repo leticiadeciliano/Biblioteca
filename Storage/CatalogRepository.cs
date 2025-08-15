@@ -11,7 +11,7 @@ namespace Storage
     //Classe para conectar com o ARQUIVO .bd (onde está o Banco de Dados SQLite)
     public class CatalogRepository
     {
-        private string _connectionString = "Data Source=biblioteca.db";
+        private string _connectionString = "Data Source=/home/dev/Biblioteca/Storage/Data/biblioteca.db";
 
         public void Add(Catalog catalog)
         {
@@ -20,18 +20,17 @@ namespace Storage
                 connection.Open();
 
                 //Metódo para inserir no SQLite
-                string query = "INSERT INTO Catalog (ID, Title, Author, Year, Number_pages, Description, Language_Id, Publisher_Id Created_At, Updated_At) VALUES (@ID, @Title, @Author, @Year, @Number_pages, @Description, @Language_Id, @Publisher_Id, @Created_At, @Updated_At)";
+                string query = "INSERT INTO Catalog (ID, Title, Author, Number_pages, Year, Description, Language_ID, Publisher_ID, Created_At, Updated_At) VALUES (@ID, @Title, @Author, @Year, @Number_pages, @Description, @Language_ID, @Publisher_ID, @Created_At, @Updated_At)";
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", catalog.ID);
+                    command.Parameters.AddWithValue("@ID", catalog.ID);
                     command.Parameters.AddWithValue("@Title", catalog.Title);
                     command.Parameters.AddWithValue("@Author", catalog.Author);
-                    command.Parameters.AddWithValue("@Year", catalog.Year);
                     command.Parameters.AddWithValue("@Number_pages", catalog.Number_pages);
                     command.Parameters.AddWithValue("@Year", catalog.Year);
                     command.Parameters.AddWithValue("@Description", catalog.Description);
-                    command.Parameters.AddWithValue("@Publisher_Id", catalog.Publisher_ID);
-                    command.Parameters.AddWithValue("@Language_Id", catalog.Language_ID);
+                    command.Parameters.AddWithValue("@Publisher_ID", catalog.Publisher_ID);
+                    command.Parameters.AddWithValue("@Language_ID", catalog.Language_ID);
 
                     command.Parameters.AddWithValue("@Created_At", catalog.Created_At);
                     command.Parameters.AddWithValue("@Updated_At", catalog.Updated_At);
@@ -60,7 +59,7 @@ namespace Storage
                     {
                         var catalog = new Catalog
                         {
-                            ID = Guid.Parse(reader["Id"].ToString() ?? Guid.Empty.ToString()),
+                            ID = Guid.Parse(reader["ID"].ToString() ?? Guid.Empty.ToString()),
                             // convertendo ID do banco de TEXT para tipo string
                             Title = Convert.ToString(reader["Title"]) ?? "",
                             Author = Convert.ToString(reader["Author"]) ?? "",
@@ -91,7 +90,7 @@ namespace Storage
                 //query
                 connection.Open();
                 var command = new SQLiteCommand("SELECT * FROM Catalog WHERE ID = @ID", connection);
-                command.Parameters.AddWithValue("@Id", ID.ToString());
+                command.Parameters.AddWithValue("@ID", ID.ToString());
 
                 using (var reader = command.ExecuteReader())
                 {
