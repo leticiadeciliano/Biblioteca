@@ -38,12 +38,12 @@ namespace Service
             return language;
         }
 
-        public void Create(string name_language)
+        public void Create(string Name)
         {
             var language = new Language
             {
                 ID = Guid.NewGuid(),
-                Name_language = name_language,
+                Name = Name,
                 LanguageID = Guid.NewGuid(),
 
                 CreatedAt = DateTime.Now,
@@ -55,7 +55,7 @@ namespace Service
         }
 
 
-        public void Update(Guid ID, string Name_language)
+        public void Update(Guid ID, string Name)
         {
             var existinglanguage = _languageRepository.GetById(ID);
             if (existinglanguage == null)
@@ -64,7 +64,7 @@ namespace Service
                 return;
             }
 
-            existinglanguage.Name_language = Name_language;
+            existinglanguage.Name = Name;
             
             existinglanguage.UpdatedAt = DateTime.Now;
 

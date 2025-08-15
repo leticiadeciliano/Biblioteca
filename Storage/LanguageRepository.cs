@@ -15,11 +15,11 @@ namespace Storage
             {
                 connection.Open();
 
-                string query = "INSERT INTO Language (ID, language, LanguageID CreatedAt, UpdatedAt) VALUES (@ID, @language, @LanguageID @CreatedAt, @UpdatedAt)";
+                string query = "INSERT INTO Language (ID, Name, LanguageID CreatedAt, UpdatedAt) VALUES (@ID, @Name, @LanguageID, @CreatedAt, @UpdatedAt)";
                 using (var command = new SQLiteCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", language.ID);
-                    command.Parameters.AddWithValue("@language", language.language);
+                    command.Parameters.AddWithValue("@language", language.Name);
                     command.Parameters.AddWithValue("@LanguageID", language.LanguageID);
 
                     command.Parameters.AddWithValue("@CreatedAt", language.CreatedAt);
@@ -48,7 +48,7 @@ namespace Storage
                         var language = new Language
                         {
                             ID = Guid.Parse(reader["ID"].ToString() ?? Guid.Empty.ToString()),
-                            language = reader["language"].ToString() ?? "",
+                            Name = reader["Name"].ToString() ?? "",
                             LanguageID = Guid.Parse(reader["LanguageID"].ToString() ?? Guid.Empty.ToString()),
 
                             CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
@@ -79,7 +79,7 @@ namespace Storage
                         return new Language
                         {
                             ID = Guid.Parse(reader["Id"].ToString() ?? Guid.Empty.ToString()),
-                            language = Convert.ToString(reader["language"]) ?? "",
+                            Name = Convert.ToString(reader["language"]) ?? "",
                             LanguageID = Guid.Parse(reader["Id"].ToString() ?? Guid.Empty.ToString()),
 
                             CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
@@ -100,15 +100,15 @@ namespace Storage
 
                 //query
                 var query = @"UPDATE Language 
-                            SET ID = @ID, language = @language, LanguageID = @LanguageID
+                            SET ID = @ID, Name = @Name, LanguageID = @LanguageID
                             UpdatedAt = @UpdatedAt
                             WHERE ID = @ID";
 
                 using (var command = new SQLiteCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Id", language.ID.ToString());
-                    command.Parameters.AddWithValue("@Title", language.language);
-                    command.Parameters.AddWithValue("@Author", language.LanguageID);
+                    command.Parameters.AddWithValue("@Name", language.Name);
+                    command.Parameters.AddWithValue("@LanguageID", language.LanguageID);
 
                     command.Parameters.AddWithValue("@UpdatedAt", DateTime.Now);
 
@@ -126,7 +126,7 @@ namespace Storage
 
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", ID.ToString());
+                    command.Parameters.AddWithValue("@ID", ID.ToString());
                     command.ExecuteNonQuery();
                 }
             }

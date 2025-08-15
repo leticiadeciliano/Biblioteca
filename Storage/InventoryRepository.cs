@@ -20,7 +20,7 @@ namespace Storage
                 {
                     command.Parameters.AddWithValue("@Id", inventory.ID);
                     command.Parameters.AddWithValue("@Condition", inventory.Condition);
-                    command.Parameters.AddWithValue("@is_foreign", inventory.is_foreign);
+                    command.Parameters.AddWithValue("@is_foreign", inventory.Is_foreign);
                     command.Parameters.AddWithValue("@CatalogID", inventory.CatalogID);
 
                     command.Parameters.AddWithValue("@CreatedAt", inventory.CreatedAt);
@@ -48,7 +48,7 @@ namespace Storage
                         {
                             ID = Guid.Parse(reader["Id"].ToString() ?? Guid.Empty.ToString()),
                             Condition = Convert.ToInt32(reader["Condition"]),
-                            is_foreign = Convert.ToBoolean(reader["is_foreign"]),
+                            Is_foreign = Convert.ToBoolean(reader["is_foreign"]),
                             CatalogID = Guid.Parse(reader["CatalogID"].ToString() ?? Guid.Empty.ToString()),
 
                             CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
@@ -69,7 +69,7 @@ namespace Storage
             {
                 //query
                 connection.Open();
-                var command = new SQLiteCommand("SELECT * FROM Inventory WHERE Id = @Id", connection);
+                var command = new SQLiteCommand("SELECT * FROM Inventory WHERE ID = @ID", connection);
                 command.Parameters.AddWithValue("@Id", id.ToString());
 
                 using (var reader = command.ExecuteReader())
@@ -78,9 +78,9 @@ namespace Storage
                     {
                         return new Inventory
                         {
-                            ID = Guid.Parse(reader["Id"].ToString() ?? Guid.Empty.ToString()),
+                            ID = Guid.Parse(reader["ID"].ToString() ?? Guid.Empty.ToString()),
                             Condition = Convert.ToInt32(reader["Condition"]),
-                            is_foreign = Convert.ToBoolean(reader["is_foreign"]),
+                            Is_foreign = Convert.ToBoolean(reader["is_foreign"]),
                             CatalogID = Guid.Parse(reader["CatalogID"].ToString() ?? Guid.Empty.ToString()),
 
                             CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
@@ -101,7 +101,7 @@ namespace Storage
 
                 //query
                 var query = @"UPDATE Inventory 
-                            SET ID = @ID, Condition = @Condition, is_foreign = @is_foreign, CatalogID = @CatalogID,
+                            SET ID = @ID, Condition = @Condition, Is_foreign = @is_foreign, CatalogID = @CatalogID,
                             UpdatedAt = @UpdatedAt
                             WHERE ID = @ID";
 
@@ -109,7 +109,7 @@ namespace Storage
                 {
                     command.Parameters.AddWithValue("@Id", inventory.ID.ToString());
                     command.Parameters.AddWithValue("@Title", inventory.Condition);
-                    command.Parameters.AddWithValue("@Author", inventory.is_foreign);
+                    command.Parameters.AddWithValue("@Author", inventory.Is_foreign);
                     command.Parameters.AddWithValue("@Year", inventory.CatalogID);
 
                     command.Parameters.AddWithValue("@UpdatedAt", DateTime.Now);
@@ -128,7 +128,7 @@ namespace Storage
 
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", ID.ToString());
+                    command.Parameters.AddWithValue("@ID", ID.ToString());
                     command.ExecuteNonQuery();
                 } 
             }

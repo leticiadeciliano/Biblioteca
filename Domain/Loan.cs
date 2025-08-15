@@ -12,10 +12,11 @@ public class Loan
     public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
     public DateTime ReturnAt { get; set; }
-    public object Days { get; internal set; }
-
-    public Loan()
-    {
-        ReturnAt = CreatedAt.AddDays(Days_to_expire);
-    }
 }
+//     public object Days { get; internal set; }
+
+//     public Loan()
+//     {
+//         ReturnAt = CreatedAt.AddDays(Days_to_expire);
+//     }
+// }

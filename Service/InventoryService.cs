@@ -45,7 +45,7 @@ namespace Service
                 ID = Guid.NewGuid(),
                 CatalogID = catalogID,
                 Condition = Condition,
-                is_foreign = is_foreign,
+                Is_foreign = is_foreign,
                 
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
@@ -55,9 +55,9 @@ namespace Service
             Console.WriteLine("Inventário adicionado com sucesso!");
         }
 
-        public void Update(Guid Id, Guid catalogID, int condition, bool is_foreign)
+        public void Update(Guid ID, Guid catalogID, int condition, bool is_foreign)
         {
-            var existingInventory = _inventoryRepository.GetById(Id);
+            var existingInventory = _inventoryRepository.GetById(ID);
             if (existingInventory == null)
             {
                 Console.WriteLine("Inventário não encontrado.");
@@ -65,7 +65,7 @@ namespace Service
             }
 
             existingInventory.Condition = condition;
-            existingInventory.is_foreign = is_foreign;
+            existingInventory.Is_foreign = is_foreign;
             
             existingInventory.UpdatedAt = DateTime.Now;
 
@@ -73,16 +73,16 @@ namespace Service
             Console.WriteLine("Inventário atualizado com sucesso!");
         }
 
-        public void Delete(Guid Id)
+        public void Delete(Guid ID)
         {
-            var existingInventory = _inventoryRepository.GetById(Id);
+            var existingInventory = _inventoryRepository.GetById(ID);
             if (existingInventory == null)
             {
                 Console.WriteLine("Inventário não encontrado.");
                 return;
             }
 
-            _inventoryRepository.Delete(Id);
+            _inventoryRepository.Delete(ID);
             Console.WriteLine("Inventário removido com sucesso!");
         }
     }

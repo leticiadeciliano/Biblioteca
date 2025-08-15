@@ -6,7 +6,7 @@ namespace Domain
     {
         public required Guid ID { get; set; } = Guid.NewGuid();
         public required int Condition { get; set; }
-        public required bool is_foreign { get; set; }
+        public required bool Is_foreign { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;

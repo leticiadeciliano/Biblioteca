@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/dev/Área de trabalho/biblioteca/biblioteca.csproj": {}
+    "/home/dev/Biblioteca/biblioteca.csproj": {}
   },
   "projects": {
-    "/home/dev/Área de trabalho/biblioteca/biblioteca.csproj": {
+    "/home/dev/Biblioteca/biblioteca.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/dev/Área de trabalho/biblioteca/biblioteca.csproj",
+        "projectUniqueName": "/home/dev/Biblioteca/biblioteca.csproj",
         "projectName": "biblioteca",
-        "projectPath": "/home/dev/Área de trabalho/biblioteca/biblioteca.csproj",
+        "projectPath": "/home/dev/Biblioteca/biblioteca.csproj",
         "packagesPath": "/home/dev/.nuget/packages/",
-        "outputPath": "/home/dev/Área de trabalho/biblioteca/obj/",
+        "outputPath": "/home/dev/Biblioteca/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/dev/.nuget/NuGet/NuGet.Config"
@@ -74,7 +74,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.117/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.118/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

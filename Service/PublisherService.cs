@@ -19,16 +19,16 @@ namespace Service
             return _publisherRepository.GetAll();
         }
 
-        public Publisher? GetById(Guid Id)
+        public Publisher? GetById(Guid ID)
         // ? solicita para retornar NULL caso não encontre
         {
-            if (Id == Guid.Empty)
+            if (ID == Guid.Empty)
             {
                 Console.WriteLine("ID inválido.");
                 return null;
             }
 
-            var publisher = _publisherRepository.GetById(Id);
+            var publisher = _publisherRepository.GetById(ID);
 
             if (publisher == null)
             {
@@ -43,7 +43,7 @@ namespace Service
         {
             var publisher = new Publisher
             {
-                Id = Guid.NewGuid(),
+                ID = Guid.NewGuid(),
                 Name_Publisher = name_publisher,
 
                 CreatedAt = DateTime.Now,
@@ -63,9 +63,9 @@ namespace Service
             Console.WriteLine("Editora adicionada com sucesso!");
         }
 
-        public void Update(Guid Id, string name_publisher)
+        public void Update(Guid ID, string name_publisher)
         {
-            var existingPublisher = _publisherRepository.GetById(Id);
+            var existingPublisher = _publisherRepository.GetById(ID);
             if (existingPublisher == null)
             {
                 Console.WriteLine("Editora não encontrada.");
@@ -80,16 +80,16 @@ namespace Service
             Console.WriteLine("Editora atualizada com sucesso!");
         }
 
-        public void Delete(Guid Id)
+        public void Delete(Guid ID)
         {
-            var existingPublisher = _publisherRepository.GetById(Id);
+            var existingPublisher = _publisherRepository.GetById(ID);
             if (existingPublisher == null)
             {
                 Console.WriteLine("Editora não encontrada.");
                 return;
             }
 
-            _publisherRepository.Delete(Id);
+            _publisherRepository.Delete(ID);
             Console.WriteLine("Editora removida com sucesso!");
         } 
     }

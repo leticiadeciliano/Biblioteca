@@ -19,15 +19,15 @@ namespace Service
             return _clientRepository.GetAll();
         }
 
-        public Client? GetById(Guid Id)
+        public Client? GetById(Guid ID)
         {
-            if (Id == Guid.Empty)
+            if (ID == Guid.Empty)
             {
                 Console.WriteLine("ID inválido.");
                 return null;
             }
 
-            var client = _clientRepository.GetById(Id);
+            var client = _clientRepository.GetById(ID);
 
             if (client == null)
             {
@@ -42,7 +42,7 @@ namespace Service
         {
             var client = new Client
             {
-                Id = Guid.NewGuid(),
+                ID = Guid.NewGuid(),
                 Name = name,
                 Email = email,
                 Phone = phone,
@@ -54,9 +54,9 @@ namespace Service
             Console.WriteLine("Cliente adicionado com sucesso!");
         }
 
-        public void Update(Guid Id, string name, string email, string phone)
+        public void Update(Guid ID, string name, string email, string phone)
         {
-            var existingClient = _clientRepository.GetById(Id);
+            var existingClient = _clientRepository.GetById(ID);
             if (existingClient == null)
             {
                 Console.WriteLine("Cliente não encontrado.");
@@ -72,16 +72,16 @@ namespace Service
             Console.WriteLine("Cliente atualizado com sucesso!");
         }
 
-        public void Delete(Guid Id)
+        public void Delete(Guid ID)
         {
-            var existingClient = _clientRepository.GetById(Id);
+            var existingClient = _clientRepository.GetById(ID);
             if (existingClient == null)
             {
                 Console.WriteLine("Cliente não encontrado.");
-                return;
+                
             }
 
-            _clientRepository.Delete(Id);
+            _clientRepository.Delete(ID);
             Console.WriteLine("Cliente removido com sucesso!");
         }
     }

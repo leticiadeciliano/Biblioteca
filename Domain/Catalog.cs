@@ -11,9 +11,11 @@ namespace Domain
         public int Number_pages { get; set; }
         public required int Year { get; set; }
         public required string Description { get; set; }
+        public required int Publisher_ID { get; set; }
+        public required string Language_ID { get; set; }
         public bool is_foreign;
 
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public DateTime Created_At { get; set; } = DateTime.Now;
+        public DateTime Updated_At { get; set; } = DateTime.Now;
     }
 }

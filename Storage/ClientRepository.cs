@@ -20,7 +20,7 @@ namespace Storage
                 string query = "INSERT INTO Client (Id, Name, Email, Phone, CreatedAt, UpdatedAt) VALUES (@Id, @Name, @Email, @Phone, @CreatedAt, @UpdatedAt)";
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", client.Id);
+                    command.Parameters.AddWithValue("@Id", client.ID);
                     command.Parameters.AddWithValue("@Name", client.Name);
                     command.Parameters.AddWithValue("@Email", client.Email);
                     command.Parameters.AddWithValue("@Phone", client.Phone);
@@ -50,7 +50,7 @@ namespace Storage
                     {
                         var clients = new Client
                         {
-                            Id = Guid.Parse(reader["Id"].ToString() ?? Guid.Empty.ToString()),
+                            ID = Guid.Parse(reader["ID"].ToString() ?? Guid.Empty.ToString()),
                             // convertendo ID do banco de TEXT para tipo string
                             Name = Convert.ToString(reader["Name"]) ?? "",
                             Email = Convert.ToString(reader["Email"]) ?? "",
@@ -76,7 +76,7 @@ namespace Storage
             {
                 //query
                 connection.Open();
-                var command = new SQLiteCommand("SELECT * FROM Client WHERE Id = @Id", connection);
+                var command = new SQLiteCommand("SELECT * FROM Client WHERE ID = @ID", connection);
                 command.Parameters.AddWithValue("@Id", ID.ToString());
 
                 using (var reader = command.ExecuteReader())
@@ -85,7 +85,7 @@ namespace Storage
                     {
                         return new Client
                         {
-                            Id = Guid.Parse(reader["Id"].ToString() ?? Guid.Empty.ToString()),
+                            ID = Guid.Parse(reader["ID"].ToString() ?? Guid.Empty.ToString()),
                             // convertendo ID do banco de TEXT para tipo string e verificando se está NULL
                             Name = Convert.ToString(reader["Name"]) ?? "",
                             Email = Convert.ToString(reader["Email"]) ?? "",
@@ -117,7 +117,7 @@ namespace Storage
 
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", client.Id.ToString());
+                    command.Parameters.AddWithValue("@ID", client.ID.ToString());
                     command.Parameters.AddWithValue("@Name", client.Name);
                     command.Parameters.AddWithValue("@Email", client.Email);
                     command.Parameters.AddWithValue("@Phone", client.Phone);
@@ -130,19 +130,20 @@ namespace Storage
             }
         }
         
-        public void Delete(Guid id)
+        public bool Delete(Guid iD)
         {
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                connection.Open();
-                var query = "DELETE FROM Client WHERE Id = @Id";
+            using var connection = new SQLiteConnection(_connectionString);
+            connection.Open();
 
-                using (var command = new SQLiteCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@Id", id.ToString());
-                    command.ExecuteNonQuery();
-                }  
-            }
+            var query = "DELETE FROM Client WHERE Id = @Id";
+
+            using var command = new SQLiteCommand(query, connection);
+            command.Parameters.AddWithValue("@Id", iD.ToString());
+
+            int linhasDeletadas = command.ExecuteNonQuery();
+
+            // > 0 irá rodar o linhasDeletadas, caso contrário não rodará
+            return linhasDeletadas > 0;
         }
     }
 }
