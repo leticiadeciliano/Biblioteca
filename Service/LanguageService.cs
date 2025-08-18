@@ -19,9 +19,9 @@ namespace Service
             return _languageRepository.GetAll();
         }
 
-        public Language? GetById(Guid ID)
+        public Language? GetById(int ID)
         {
-            if (ID == Guid.Empty)
+            if (ID < 0)
             {
                 Console.WriteLine("ID inválido.");
                 return null;
@@ -42,7 +42,6 @@ namespace Service
         {
             var language = new Language
             {
-                ID = Guid.NewGuid(),
                 Name = Name,
                 LanguageID = Guid.NewGuid(),
 
@@ -55,7 +54,7 @@ namespace Service
         }
 
 
-        public void Update(Guid ID, string Name)
+        public void Update(int ID, string Name)
         {
             var existinglanguage = _languageRepository.GetById(ID);
             if (existinglanguage == null)
@@ -72,7 +71,7 @@ namespace Service
             Console.WriteLine("Idioma atualizado com sucesso!");
         }
 
-        public void Delete(Guid ID)
+        public void Delete(int ID)
         {
             var existinglanguage = _languageRepository.GetById(ID);
             if (existinglanguage == null)

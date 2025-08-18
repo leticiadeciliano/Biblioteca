@@ -19,10 +19,10 @@ namespace Service
             return _publisherRepository.GetAll();
         }
 
-        public Publisher? GetById(Guid ID)
+        public Publisher? GetById(int ID)
         // ? solicita para retornar NULL caso não encontre
         {
-            if (ID == Guid.Empty)
+            if (ID < 0)
             {
                 Console.WriteLine("ID inválido.");
                 return null;
@@ -43,7 +43,6 @@ namespace Service
         {
             var publisher = new Publisher
             {
-                ID = Guid.NewGuid(),
                 Name_Publisher = name_publisher,
 
                 CreatedAt = DateTime.Now,
@@ -63,7 +62,7 @@ namespace Service
             Console.WriteLine("Editora adicionada com sucesso!");
         }
 
-        public void Update(Guid ID, string name_publisher)
+        public void Update(int ID, string name_publisher)
         {
             var existingPublisher = _publisherRepository.GetById(ID);
             if (existingPublisher == null)
@@ -80,7 +79,7 @@ namespace Service
             Console.WriteLine("Editora atualizada com sucesso!");
         }
 
-        public void Delete(Guid ID)
+        public void Delete(int ID)
         {
             var existingPublisher = _publisherRepository.GetById(ID);
             if (existingPublisher == null)

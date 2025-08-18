@@ -19,9 +19,9 @@ namespace Service
             return _genreRepository.GetAll();
         }
 
-        public Genre? GetById(Guid ID)
+        public Genre? GetById(int ID)
         {
-            if (ID == Guid.Empty)
+            if (ID < 0)
             {
                 Console.WriteLine("ID inválido.");
                 return null;
@@ -42,20 +42,19 @@ namespace Service
         {
             var genre = new Genre
             {
-                ID = Guid.NewGuid(),
                 Name_genre = name_genre,
                 
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
+                Created_At = DateTime.Now,
+                Updated_At = DateTime.Now
             };
 
             _genreRepository.Add(genre);
             Console.WriteLine("Gênero adicionado com sucesso!");
         }
 
-        public void Update(Guid Id, string Name_genre)
+        public void Update(int ID, string Name_genre)
         {
-            var existingGenre = _genreRepository.GetById(Id);
+            var existingGenre = _genreRepository.GetById(ID);
             if (existingGenre == null)
             {
                 Console.WriteLine("Cliente não encontrado.");
@@ -64,22 +63,22 @@ namespace Service
 
             existingGenre.Name_genre = Name_genre;
             
-            existingGenre.UpdatedAt = DateTime.Now;
+            existingGenre.Updated_At = DateTime.Now;
 
             _genreRepository.Update(existingGenre);
             Console.WriteLine("Cliente atualizado com sucesso!");
         }
 
-        public void Delete(Guid Id)
+        public void Delete(int ID)
         {
-            var existingGenre = _genreRepository.GetById(Id);
+            var existingGenre = _genreRepository.GetById(ID);
             if (existingGenre == null)
             {
                 Console.WriteLine("Gênero não encontrado.");
                 return;
             }
 
-            _genreRepository.Delete(Id);
+            _genreRepository.Delete(ID);
             Console.WriteLine("Gênero removido com sucesso!");
         }
     }

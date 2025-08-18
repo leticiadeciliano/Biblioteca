@@ -7,24 +7,19 @@ namespace Storage
 {
     public class InventoryRepository
     {
-        private string _connectionString = "Data Source=biblioteca.db";
-
         public void Add(Inventory inventory)
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var connection = DataBase.GetConnection();
             {
-                connection.Open();
-
-                string query = "INSERT INTO Inventory (ID, Condition, is_foreign, CreatedAt, UpdatedAt) VALUES (@ID, @Condition, @is_foreign, @CreatedAt, @UpdatedAt)";
+                string query = "INSERT INTO Inventory (Condition, Is_available, Created_At, Updated_At) VALUES (@Condition, @Is_available, @Created_At, @Updated_At)";
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", inventory.ID);
                     command.Parameters.AddWithValue("@Condition", inventory.Condition);
-                    command.Parameters.AddWithValue("@is_foreign", inventory.Is_foreign);
+                    command.Parameters.AddWithValue("@Is_available", inventory.Is_available);
                     command.Parameters.AddWithValue("@CatalogID", inventory.CatalogID);
 
-                    command.Parameters.AddWithValue("@CreatedAt", inventory.CreatedAt);
-                    command.Parameters.AddWithValue("@UpdatedAt", inventory.UpdatedAt);
+                    command.Parameters.AddWithValue("@Created_At", inventory.Created_At);
+                    command.Parameters.AddWithValue("@Updated_At", inventory.Updated_At);
 
                     command.ExecuteNonQuery();
                 }
@@ -35,10 +30,8 @@ namespace Storage
         {
             var inventory = new List<Inventory>();
 
-            using (var connection = new SQLiteConnection("Data Source=biblioteca.db"))
+            var connection = DataBase.GetConnection();
             {
-                connection.Open();
-
                 var command = new SQLiteCommand("SELECT * FROM Inventory", connection);
                 using (var reader = command.ExecuteReader())
                 {
@@ -46,13 +39,13 @@ namespace Storage
                     {
                         var item = new Inventory
                         {
-                            ID = Guid.Parse(reader["Id"].ToString() ?? Guid.Empty.ToString()),
+                            ID = Convert.ToInt32(reader["ID"]),
                             Condition = Convert.ToInt32(reader["Condition"]),
-                            Is_foreign = Convert.ToBoolean(reader["is_foreign"]),
+                            Is_available = Convert.ToBoolean(reader["Is_available"]),
                             CatalogID = Guid.Parse(reader["CatalogID"].ToString() ?? Guid.Empty.ToString()),
 
-                            CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
-                            UpdatedAt = Convert.ToDateTime(reader["UpdatedAt"])
+                            Created_At = Convert.ToDateTime(reader["Created_At"]),
+                            Updated_At = Convert.ToDateTime(reader["Updated_At"])
                         };
 
                         inventory.Add(item);
@@ -63,14 +56,12 @@ namespace Storage
             return inventory;
         }
 
-        public Inventory GetById(Guid id)
+        public Inventory GetById(int ID)
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var connection = DataBase.GetConnection();
             {
-                //query
-                connection.Open();
                 var command = new SQLiteCommand("SELECT * FROM Inventory WHERE ID = @ID", connection);
-                command.Parameters.AddWithValue("@Id", id.ToString());
+                command.Parameters.AddWithValue("@ID", ID.ToString());
 
                 using (var reader = command.ExecuteReader())
                 {
@@ -78,13 +69,13 @@ namespace Storage
                     {
                         return new Inventory
                         {
-                            ID = Guid.Parse(reader["ID"].ToString() ?? Guid.Empty.ToString()),
+                            ID = Convert.ToInt32(reader["ID"]),
                             Condition = Convert.ToInt32(reader["Condition"]),
-                            Is_foreign = Convert.ToBoolean(reader["is_foreign"]),
+                            Is_available = Convert.ToBoolean(reader["Is_available"]),
                             CatalogID = Guid.Parse(reader["CatalogID"].ToString() ?? Guid.Empty.ToString()),
 
-                            CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
-                            UpdatedAt = Convert.ToDateTime(reader["UpdatedAt"])
+                            Created_At = Convert.ToDateTime(reader["Created_At"]),
+                            Updated_At = Convert.ToDateTime(reader["Updated_At"])
                         };
                     }
                 }
@@ -95,24 +86,22 @@ namespace Storage
 
         public void Update(Inventory inventory)
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var connection = DataBase.GetConnection();
             {
-                connection.Open();
-
                 //query
                 var query = @"UPDATE Inventory 
-                            SET ID = @ID, Condition = @Condition, Is_foreign = @is_foreign, CatalogID = @CatalogID,
-                            UpdatedAt = @UpdatedAt
+                            SET Condition = @Condition, Is_available = @Is_available, CatalogID = @CatalogID,
+                            Updated_At = @Updated_At
                             WHERE ID = @ID";
 
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", inventory.ID.ToString());
+                    command.Parameters.AddWithValue("@ID", inventory.ID);
                     command.Parameters.AddWithValue("@Title", inventory.Condition);
-                    command.Parameters.AddWithValue("@Author", inventory.Is_foreign);
+                    command.Parameters.AddWithValue("@Author", inventory.Is_available);
                     command.Parameters.AddWithValue("@Year", inventory.CatalogID);
 
-                    command.Parameters.AddWithValue("@UpdatedAt", DateTime.Now);
+                    command.Parameters.AddWithValue("@Updated_At", DateTime.Now);
 
                     command.ExecuteNonQuery();
                 }
@@ -121,17 +110,21 @@ namespace Storage
 
         public void Delete(Guid ID)
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var connection = DataBase.GetConnection();
             {
-                connection.Open();
                 var query = "DELETE FROM Inventory WHERE ID = @ID";
 
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@ID", ID.ToString());
+                    command.Parameters.AddWithValue("@ID", ID);
                     command.ExecuteNonQuery();
                 } 
             }
+        }
+
+        internal void Delete(int iD)
+        {
+            throw new NotImplementedException();
         }
     }
 }

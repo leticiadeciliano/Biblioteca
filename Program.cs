@@ -47,28 +47,22 @@
 using Storage;
 using Domain;
 
-class Program
+var repo = new InventoryRepository();
+
+var newInventory = new Inventory
 {
-    static void Main()
-    {
-        var repo = new GenreRepository();
+    ID = 1,
+    Condition = 3,
+    Is_available = true,
+    CatalogID = Guid.NewGuid(),
+};
 
-        var novoGênero = new Genre
-        {
-            ID = Guid.NewGuid(),
-            Name_genre = "Ação",
-            
-            
-        };
+repo.Add(newInventory);
+Console.WriteLine("Gênero salvo no banco!");
 
-        repo.Add(novoGênero);
-        Console.WriteLine("Livro salvo no banco!");
-
-        var livros = repo.GetAll();
-        foreach (var l in livros)
-        {
-            Console.WriteLine($"{l.ID} - {l.Name_genre}");
-        }
-    }
+var inv = repo.GetAll();
+foreach (var i in inv)
+{
+    Console.WriteLine($"{i.ID} - {i.Condition} - {i.Is_available} - {i.CatalogID}");
 }
 

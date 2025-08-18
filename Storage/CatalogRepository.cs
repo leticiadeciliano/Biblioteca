@@ -11,14 +11,10 @@ namespace Storage
     //Classe para conectar com o ARQUIVO .bd (onde está o Banco de Dados SQLite)
     public class CatalogRepository
     {
-        private string _connectionString = "Data Source=/home/dev/Biblioteca/Storage/Data/biblioteca.db";
-
         public void Add(Catalog catalog)
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var connection = DataBase.GetConnection();
             {
-                connection.Open();
-
                 //Metódo para inserir no SQLite
                 string query = "INSERT INTO Catalog (ID, Title, Author, Number_pages, Year, Description, Language_ID, Publisher_ID, Created_At, Updated_At) VALUES (@ID, @Title, @Author, @Year, @Number_pages, @Description, @Language_ID, @Publisher_ID, @Created_At, @Updated_At)";
                 using (var command = new SQLiteCommand(query, connection))
@@ -46,11 +42,8 @@ namespace Storage
             //criando lista
             var catalogs = new List<Catalog>();
 
-            //abrindo conexão com o banco
-            using (var connection = new SQLiteConnection(_connectionString))
+            var connection = DataBase.GetConnection();
             {
-                connection.Open();
-
                 //query
                 var command = new SQLiteCommand("SELECT * FROM Catalog", connection);
                 using (var reader = command.ExecuteReader())
@@ -85,10 +78,8 @@ namespace Storage
         //Classe GetById
         public Catalog GetById(Guid ID)
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var connection = DataBase.GetConnection();
             {
-                //query
-                connection.Open();
                 var command = new SQLiteCommand("SELECT * FROM Catalog WHERE ID = @ID", connection);
                 command.Parameters.AddWithValue("@ID", ID.ToString());
 
@@ -121,11 +112,8 @@ namespace Storage
         //Class UPDATE
         public void Update(Catalog catalog)
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var connection = DataBase.GetConnection();
             {
-                connection.Open();
-
-                //query
                 var query = @"UPDATE Catalog 
                             SET Title = @Title, Author = @Author, Year = @Year,
                                 Number_pages = @Number_pages, Description = @Description,
@@ -156,9 +144,8 @@ namespace Storage
         //Class DELETE
         public void Delete(Guid ID)
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var connection = DataBase.GetConnection();
             {
-                connection.Open();
                 var query = "DELETE FROM Catalog WHERE ID = @ID";
                 //Por enquanto será deleado o ID, que está conectado com os outros elementos de uma tabela
 

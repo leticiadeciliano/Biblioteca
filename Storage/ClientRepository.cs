@@ -1,8 +1,6 @@
 using System;
-using Domain;
-using Storage;
 using System.Data.SQLite;
-using System.Data.Entity;
+using Domain;
 
 namespace Storage
 {
@@ -11,15 +9,13 @@ namespace Storage
         //Classe Adicionar 
         public void Add(Client client)
         {
-            var connection = Database.GetConnection();
+            var connection = DataBase.GetConnection();
             {
-                connection.Open();
-
                 //Metódo para inserir
-                string query = "INSERT INTO Client (Id, Name, Email, Phone, CreatedAt, UpdatedAt) VALUES (@Id, @Name, @Email, @Phone, @CreatedAt, @UpdatedAt)";
+                string query = "INSERT INTO Client (ID, Name, Email, Phone, CreatedAt, UpdatedAt) VALUES (@ID, @Name, @Email, @Phone, @CreatedAt, @UpdatedAt)";
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", client.ID);
+                    command.Parameters.AddWithValue("@ID", client.ID);
                     command.Parameters.AddWithValue("@Name", client.Name);
                     command.Parameters.AddWithValue("@Email", client.Email);
                     command.Parameters.AddWithValue("@Phone", client.Phone);
@@ -37,10 +33,8 @@ namespace Storage
             //lista
             var client = new List<Client>();
 
-            using (var connection = new SQLiteConnection(_connectionString))
+            var connection = DataBase.GetConnection();
             {
-                connection.Open();
-
                 //query
                 var command = new SQLiteCommand("SELECT * FROM Client", connection);
                 using (var reader = command.ExecuteReader())
@@ -71,12 +65,10 @@ namespace Storage
 
         public Client GetById(Guid ID)
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var connection = DataBase.GetConnection();
             {
-                //query
-                connection.Open();
                 var command = new SQLiteCommand("SELECT * FROM Client WHERE ID = @ID", connection);
-                command.Parameters.AddWithValue("@Id", ID.ToString());
+                command.Parameters.AddWithValue("@ID", ID.ToString());
 
                 using (var reader = command.ExecuteReader())
                 {
@@ -103,11 +95,8 @@ namespace Storage
        
         public void Update(Client client)
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var connection = DataBase.GetConnection();
             {
-                connection.Open();
-
-                //query
                 var query = @"UPDATE Client
                             SET Name = @Name, Email = @Email, Phone = @Phone,
                                 UpdatedAt = @UpdatedAt
@@ -129,15 +118,14 @@ namespace Storage
             }
         }
         
-        public bool Delete(Guid iD)
+        public bool Delete(Guid ID)
         {
-            using var connection = new SQLiteConnection(_connectionString);
-            connection.Open();
+            var connection = DataBase.GetConnection();
 
-            var query = "DELETE FROM Client WHERE Id = @Id";
+            var query = "DELETE FROM Client WHERE ID = @ID";
 
             using var command = new SQLiteCommand(query, connection);
-            command.Parameters.AddWithValue("@Id", iD.ToString());
+            command.Parameters.AddWithValue("@ID", ID.ToString());
 
             int linhasDeletadas = command.ExecuteNonQuery();
 

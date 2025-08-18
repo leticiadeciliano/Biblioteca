@@ -19,9 +19,9 @@ namespace Service
             return _inventoryRepository.GetAll();
         }
 
-        public Inventory? GetById(Guid ID)
+        public Inventory? GetById(int ID)
         {
-            if (ID == Guid.Empty)
+            if (ID < 0)
             {
                 Console.WriteLine("ID inválido.");
                 return null;
@@ -38,24 +38,23 @@ namespace Service
             return inventory;
         }
 
-        public void Create(Guid catalogID, int Condition, bool is_foreign )
+        public void Create(Guid catalogID, int Condition, bool Is_available )
         {
             var inventory = new Inventory
             {
-                ID = Guid.NewGuid(),
                 CatalogID = catalogID,
                 Condition = Condition,
-                Is_foreign = is_foreign,
+                Is_available = Is_available,
                 
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
+                Created_At = DateTime.Now,
+                Updated_At = DateTime.Now
             };
 
             _inventoryRepository.Add(inventory);
             Console.WriteLine("Inventário adicionado com sucesso!");
         }
 
-        public void Update(Guid ID, Guid catalogID, int condition, bool is_foreign)
+        public void Update(int ID, Guid catalogID, int condition, bool Is_available)
         {
             var existingInventory = _inventoryRepository.GetById(ID);
             if (existingInventory == null)
@@ -65,15 +64,15 @@ namespace Service
             }
 
             existingInventory.Condition = condition;
-            existingInventory.Is_foreign = is_foreign;
+            existingInventory.Is_available = Is_available;
             
-            existingInventory.UpdatedAt = DateTime.Now;
+            existingInventory.Updated_At = DateTime.Now;
 
             _inventoryRepository.Update(existingInventory);
             Console.WriteLine("Inventário atualizado com sucesso!");
         }
 
-        public void Delete(Guid ID)
+        public void Delete(int ID)
         {
             var existingInventory = _inventoryRepository.GetById(ID);
             if (existingInventory == null)

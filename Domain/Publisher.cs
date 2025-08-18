@@ -4,7 +4,7 @@ namespace Domain
 {
     public class Publisher
     {
-        public required Guid ID { get; set; } = Guid.NewGuid();
+        public int ID { get; set; }
         public required string Name_Publisher { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;

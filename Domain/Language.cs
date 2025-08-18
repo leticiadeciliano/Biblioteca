@@ -4,7 +4,7 @@ namespace Domain
 {
     public class Language
     {
-        public required Guid ID { get; set; } = Guid.NewGuid();
+        public int ID { get; set; }
         public required string Name { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;

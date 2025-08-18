@@ -7,18 +7,13 @@ namespace Storage
 {
     public class LanguageRepository
     {
-        private string _connectionString = "Data Source=biblioteca.db";
-
         public void Add(Language language)
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var connection = DataBase.GetConnection();
             {
-                connection.Open();
-
-                string query = "INSERT INTO Language (ID, Name, LanguageID CreatedAt, UpdatedAt) VALUES (@ID, @Name, @LanguageID, @CreatedAt, @UpdatedAt)";
+                string query = "INSERT INTO Language (Name, LanguageID CreatedAt, UpdatedAt) VALUES (@Name, @LanguageID, @CreatedAt, @UpdatedAt)";
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", language.ID);
                     command.Parameters.AddWithValue("@language", language.Name);
                     command.Parameters.AddWithValue("@LanguageID", language.LanguageID);
 
@@ -35,10 +30,8 @@ namespace Storage
 
             var languages = new List<Language>();
 
-            using (var connection = new SQLiteConnection("Data Source=biblioteca.db"))
+            var connection = DataBase.GetConnection();
             {
-                connection.Open();
-
                 // query
                 var command = new SQLiteCommand("SELECT * FROM Language", connection);
                 using (var reader = command.ExecuteReader())
@@ -47,7 +40,7 @@ namespace Storage
                     {
                         var language = new Language
                         {
-                            ID = Guid.Parse(reader["ID"].ToString() ?? Guid.Empty.ToString()),
+                            ID = Convert.ToInt32(reader["ID"]),
                             Name = reader["Name"].ToString() ?? "",
                             LanguageID = Guid.Parse(reader["LanguageID"].ToString() ?? Guid.Empty.ToString()),
 
@@ -63,12 +56,10 @@ namespace Storage
         }
 
 
-        public Language GetById(Guid ID)
+        public Language GetById(int ID)
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var connection = DataBase.GetConnection();
             {
-                //query
-                connection.Open();
                 var command = new SQLiteCommand("SELECT * FROM Language WHERE ID = @ID", connection);
                 command.Parameters.AddWithValue("@ID", ID.ToString());
 
@@ -78,7 +69,7 @@ namespace Storage
                     {
                         return new Language
                         {
-                            ID = Guid.Parse(reader["Id"].ToString() ?? Guid.Empty.ToString()),
+                            ID = Convert.ToInt32(reader["ID"]),
                             Name = Convert.ToString(reader["language"]) ?? "",
                             LanguageID = Guid.Parse(reader["Id"].ToString() ?? Guid.Empty.ToString()),
 
@@ -94,19 +85,16 @@ namespace Storage
 
         public void Update(Language language)
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var connection = DataBase.GetConnection();
             {
-                connection.Open();
-
-                //query
                 var query = @"UPDATE Language 
-                            SET ID = @ID, Name = @Name, LanguageID = @LanguageID
+                            SET Name = @Name, LanguageID = @LanguageID
                             UpdatedAt = @UpdatedAt
                             WHERE ID = @ID";
 
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", language.ID.ToString());
+                    command.Parameters.AddWithValue("@ID", language.ID);
                     command.Parameters.AddWithValue("@Name", language.Name);
                     command.Parameters.AddWithValue("@LanguageID", language.LanguageID);
 
@@ -117,16 +105,15 @@ namespace Storage
             }
         }
 
-        public void Delete(Guid ID)
+        public void Delete(int ID)
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var connection = DataBase.GetConnection();
             {
-                connection.Open();
                 var query = "DELETE FROM Language WHERE ID = @ID";
 
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@ID", ID.ToString());
+                    command.Parameters.AddWithValue("@ID", ID);
                     command.ExecuteNonQuery();
                 }
             }

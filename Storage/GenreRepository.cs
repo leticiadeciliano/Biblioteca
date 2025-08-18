@@ -7,22 +7,17 @@ namespace Storage
 {
     public class GenreRepository
     {
-        private string _connectionString = "Data Source=biblioteca.db";
-
         public void Add(Genre genre)
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var connection = DataBase.GetConnection();
             {
-                connection.Open();
-
-                string query = "INSERT INTO Genre (ID, Title, CreatedAt, UpdatedAt) VALUES (@ID, @Name_genre, @Description, @CreatedAt, @UpdatedAt)";
+                string query = "INSERT INTO Genre (Name_genre, Created_At, Updated_At) VALUES (@Name_genre, @Created_At, @Updated_At)";
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@ID", genre.ID);
                     command.Parameters.AddWithValue("@Name_genre", genre.Name_genre);
 
-                    command.Parameters.AddWithValue("@CreatedAt", genre.CreatedAt);
-                    command.Parameters.AddWithValue("@UpdatedAt", genre.UpdatedAt);
+                    command.Parameters.AddWithValue("@Created_At", genre.Created_At);
+                    command.Parameters.AddWithValue("@Updated_At", genre.Updated_At);
 
                     command.ExecuteNonQuery();
                 }
@@ -31,15 +26,11 @@ namespace Storage
 
         public List<Genre> GetAll()
         {
-            //criando lista
+
             var genres = new List<Genre>();
 
-            //abrindo conexão com o banco
-            using (var connection = new SQLiteConnection("Data Source=biblioteca.db"))
+            var connection = DataBase.GetConnection();
             {
-                connection.Open();
-
-                //query
                 var command = new SQLiteCommand("SELECT * FROM Genre", connection);
                 using (var reader = command.ExecuteReader())
                 {
@@ -47,11 +38,11 @@ namespace Storage
                     {
                         var genre = new Genre
                         {
-                            ID = Guid.Parse(reader["Id"].ToString() ?? Guid.Empty.ToString()),
+                            ID = Convert.ToInt32(reader["ID"]),
                             Name_genre = Convert.ToString(reader["Name_genre"]) ?? "",
 
-                            CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
-                            UpdatedAt = Convert.ToDateTime(reader["UpdatedAt"])
+                            Created_At = Convert.ToDateTime(reader["Created_At"]),
+                            Updated_At = Convert.ToDateTime(reader["Updated_At"])
                         };
 
                         genres.Add(genre);
@@ -62,14 +53,13 @@ namespace Storage
             return genres;
         }
 
-        public Genre GetById(Guid id)
+        public Genre GetById(int ID)
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var connection = DataBase.GetConnection();
             {
-                //query
-                connection.Open();
-                var command = new SQLiteCommand("SELECT * FROM Genre WHERE Id = @Id", connection);
-                command.Parameters.AddWithValue("@Id", id.ToString());
+
+                var command = new SQLiteCommand("SELECT * FROM Genre WHERE ID = @ID", connection);
+                command.Parameters.AddWithValue("@ID", ID.ToString());
 
                 using (var reader = command.ExecuteReader())
                 {
@@ -77,12 +67,11 @@ namespace Storage
                     {
                         return new Genre
                         {
-                            ID = Guid.Parse(reader["Id"].ToString() ?? Guid.Empty.ToString()),
-                            // convertendo ID do banco de TEXT para tipo string e verificando se está NULL
+                            ID = Convert.ToInt32(reader["ID"]),
                             Name_genre = Convert.ToString(reader["Name_genre"]) ?? "",
 
-                            CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
-                            UpdatedAt = Convert.ToDateTime(reader["UpdatedAt"])
+                            Created_At = Convert.ToDateTime(reader["Created_At"]),
+                            Updated_At = Convert.ToDateTime(reader["Updated_At"])
                         };
                     }
                 }
@@ -93,38 +82,34 @@ namespace Storage
 
         public void Update(Genre genre)
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var connection = DataBase.GetConnection();
             {
-                connection.Open();
-
-                //query
                 var query = @"UPDATE Genre
-                            SET ID = @ID, Name_genre = @Name_genre,
-                            UpdatedAt = @UpdatedAt
+                            SET Name_genre = @Name_genre,
+                            Updated_At = @Updated_At
                             WHERE Id = @Id";
 
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", genre.ID.ToString());
-                    command.Parameters.AddWithValue("@Title", genre.Name_genre);
+                    command.Parameters.AddWithValue("@ID", genre.ID);
+                    command.Parameters.AddWithValue("@Name_genre", genre.Name_genre);
 
-                    command.Parameters.AddWithValue("@UpdatedAt", DateTime.Now);
+                    command.Parameters.AddWithValue("@Updated_At", DateTime.Now);
 
                     command.ExecuteNonQuery();
                 }
             }
         }
         
-        public void Delete(Guid ID)
+        public void Delete(int ID)
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var connection = DataBase.GetConnection();
             {
-                connection.Open();
-                var query = "DELETE FROM Genre WHERE Id = @Id";
+                var query = "DELETE FROM Genre WHERE ID = @ID";
 
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@ID", ID.ToString());
+                    command.Parameters.AddWithValue("@ID", ID);
                     command.ExecuteNonQuery();
                 } 
             }
