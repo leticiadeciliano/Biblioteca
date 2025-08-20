@@ -1,65 +1,33 @@
-using System;
-using Domain;
 using System.Data.SQLite;
-using System.Collections.Generic;
+using Biblioteca.Domain.Interfaces;
+using Domain;
 
 namespace Storage
 {
-    public class GenreRepository
+    public class GenreRepository : IGenreRepository
     {
         public void Add(Genre genre)
         {
-            var connection = DataBase.GetConnection();
+            using (var connection = DataBase.GetConnection())
             {
-                string query = "INSERT INTO Genre (Name_genre, Created_At, Updated_At) VALUES (@Name_genre, @Created_At, @Updated_At)";
+                string query = @"INSERT INTO Genre (Name_genre, Created_At, Updated_At) 
+                                 VALUES (@Name_genre, @Created_At, @Updated_At)";
                 using (var command = new SQLiteCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Name_genre", genre.Name_genre);
-
                     command.Parameters.AddWithValue("@Created_At", genre.Created_At);
                     command.Parameters.AddWithValue("@Updated_At", genre.Updated_At);
-
                     command.ExecuteNonQuery();
                 }
             }
         }
 
-        public List<Genre> GetAll()
+        public Genre GetById(Guid id)
         {
-
-            var genres = new List<Genre>();
-
-            var connection = DataBase.GetConnection();
+            using (var connection = DataBase.GetConnection())
             {
-                var command = new SQLiteCommand("SELECT * FROM Genre", connection);
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        var genre = new Genre
-                        {
-                            ID = Convert.ToInt32(reader["ID"]),
-                            Name_genre = Convert.ToString(reader["Name_genre"]) ?? "",
-
-                            Created_At = Convert.ToDateTime(reader["Created_At"]),
-                            Updated_At = Convert.ToDateTime(reader["Updated_At"])
-                        };
-
-                        genres.Add(genre);
-                    }
-                }
-            }
-
-            return genres;
-        }
-
-        public Genre GetById(int ID)
-        {
-            var connection = DataBase.GetConnection();
-            {
-
                 var command = new SQLiteCommand("SELECT * FROM Genre WHERE ID = @ID", connection);
-                command.Parameters.AddWithValue("@ID", ID.ToString());
+                command.Parameters.AddWithValue("@ID", id.ToString());
 
                 using (var reader = command.ExecuteReader())
                 {
@@ -69,49 +37,69 @@ namespace Storage
                         {
                             ID = Convert.ToInt32(reader["ID"]),
                             Name_genre = Convert.ToString(reader["Name_genre"]) ?? "",
-
                             Created_At = Convert.ToDateTime(reader["Created_At"]),
                             Updated_At = Convert.ToDateTime(reader["Updated_At"])
                         };
                     }
                 }
             }
+            throw new Exception($"Gênero com ID {id} não encontrado.");
+        }
 
-            return null!;
+        public IEnumerable<Genre> GetAll()
+        {
+            var genres = new List<Genre>();
+
+            using (var connection = DataBase.GetConnection())
+            {
+                var query = "SELECT * FROM Genre";
+                using (var command = new SQLiteCommand(query, connection))
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        genres.Add(new Genre
+                        {
+                            ID = Convert.ToInt32(reader["ID"]),
+                            Name_genre = Convert.ToString(reader["Name_genre"]) ?? "",
+                            Created_At = Convert.ToDateTime(reader["Created_At"]),
+                            Updated_At = Convert.ToDateTime(reader["Updated_At"])
+                        });
+                    }
+                }
+            }
+            return genres;
         }
 
         public void Update(Genre genre)
         {
-            var connection = DataBase.GetConnection();
+            using (var connection = DataBase.GetConnection())
             {
                 var query = @"UPDATE Genre
-                            SET Name_genre = @Name_genre,
-                            Updated_At = @Updated_At
-                            WHERE Id = @Id";
+                              SET Name_genre = @Name_genre,
+                                  Updated_At = @Updated_At
+                              WHERE ID = @ID";
 
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@ID", genre.ID);
+                    command.Parameters.AddWithValue("@ID", genre.ID.ToString());
                     command.Parameters.AddWithValue("@Name_genre", genre.Name_genre);
-
                     command.Parameters.AddWithValue("@Updated_At", DateTime.Now);
-
                     command.ExecuteNonQuery();
                 }
             }
         }
-        
-        public void Delete(int ID)
+
+        public void Delete(Guid ID)
         {
-            var connection = DataBase.GetConnection();
+            using (var connection = DataBase.GetConnection())
             {
                 var query = "DELETE FROM Genre WHERE ID = @ID";
-
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@ID", ID);
+                    command.Parameters.AddWithValue("@ID", ID.ToString());
                     command.ExecuteNonQuery();
-                } 
+                }
             }
         }
     }

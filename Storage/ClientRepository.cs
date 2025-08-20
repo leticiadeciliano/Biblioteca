@@ -1,10 +1,11 @@
 using System;
 using System.Data.SQLite;
+using Biblioteca.Domain.Interfaces;
 using Domain;
 
 namespace Storage
 {
-    public class ClientRepository
+    public class ClientRepository : IClientRepository
     {
         //Classe Adicionar 
         public void Add(Client client)
@@ -28,7 +29,7 @@ namespace Storage
             }
         }
 
-        public List<Client> GetAll()
+        public IEnumerable<Client> GetAll()
         {
             //lista
             var client = new List<Client>();
@@ -118,19 +119,18 @@ namespace Storage
             }
         }
         
-        public bool Delete(Guid ID)
+        public void Delete(Guid ID)
         {
             var connection = DataBase.GetConnection();
+            {
+                var query = "DELETE FROM Client WHERE ID = @ID";
 
-            var query = "DELETE FROM Client WHERE ID = @ID";
-
-            using var command = new SQLiteCommand(query, connection);
-            command.Parameters.AddWithValue("@ID", ID.ToString());
-
-            int linhasDeletadas = command.ExecuteNonQuery();
-
-            // > 0 irá rodar o linhasDeletadas, caso contrário não rodará
-            return linhasDeletadas > 0;
+                using (var command = new SQLiteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ID", ID.ToString());
+                    command.ExecuteNonQuery();
+                } 
+            }
         }
     }
 }

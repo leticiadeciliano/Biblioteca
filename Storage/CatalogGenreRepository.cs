@@ -2,28 +2,55 @@ using System;
 using Domain;
 using System.Data.SQLite;
 using System.Collections.Generic;
+using Biblioteca.Domain.Interfaces;
 
 namespace Storage
 {
-    public class CatalogGenreRepository
+    public class CatalogGenreRepository : ICatalogGenreRepository
     {
         public void Add(CatalogGenre item)
         {
            var connection = DataBase.GetConnection();
             {
-                var command = new SQLiteCommand("INSERT INTO CatalogGenre (ID, CatalogID, GenreID, CreatedAt, UpdatedAt) VALUES (@ID, @CatalogID, @GenreID, @CreatedAt, @UpdatedAt)", connection);
+                var command = new SQLiteCommand("INSERT INTO CatalogGenre (ID, CatalogID, GenreID, Created_At, Updated_At) VALUES (@ID, @CatalogID, @GenreID, @Created_At, @Updated_At)", connection);
 
                 command.Parameters.AddWithValue("@ID", item.ID.ToString());
                 command.Parameters.AddWithValue("@CatalogID", item.CatalogID.ToString());
                 command.Parameters.AddWithValue("@GenreID", item.GenreID.ToString());
-                command.Parameters.AddWithValue("@CreatedAt", item.CreatedAt.ToString("s"));
-                command.Parameters.AddWithValue("@UpdatedAt", item.UpdatedAt.ToString("s"));
+                command.Parameters.AddWithValue("@Created_At", item.Created_At.ToString("s"));
+                command.Parameters.AddWithValue("@Updated_At", item.Updated_At.ToString("s"));
 
                 command.ExecuteNonQuery();
             }
         }
+        public CatalogGenre GetById(Guid ID)
+        {
+            var connection = DataBase.GetConnection();
+            {
+                var command = new SQLiteCommand("SELECT * FROM CatalogGenre WHERE ID = @ID", connection);
+                command.Parameters.AddWithValue("@ID", ID.ToString());
 
-        public List<CatalogGenre> GetAll()
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return new CatalogGenre
+                        {
+                            ID = Guid.Parse(reader["ID"].ToString() ?? Guid.Empty.ToString()),
+                            // convertendo ID do banco de TEXT para tipo string e verificando se está NULL
+                            CatalogID = Guid.Parse(reader["ID"].ToString() ?? Guid.Empty.ToString()),
+                            GenreID = Guid.Parse(reader["ID"].ToString() ?? Guid.Empty.ToString()),
+                            
+                            Created_At = Convert.ToDateTime(reader["Created_At"]),
+                            Updated_At = Convert.ToDateTime(reader["Updated_At"])
+                        };
+                    }
+                }
+            }
+
+            return null!;
+        }
+        public IEnumerable<CatalogGenre> GetAll()
         {
             var items = new List<CatalogGenre>();
 
@@ -40,8 +67,8 @@ namespace Storage
                             ID = Guid.Parse(reader["ID"].ToString() ?? Guid.Empty.ToString()),
                             CatalogID = Guid.Parse(reader["CatalogID"].ToString() ?? Guid.Empty.ToString()),
                             GenreID = Guid.Parse(reader["GenreID"].ToString() ?? Guid.Empty.ToString()),
-                            CreatedAt = DateTime.Parse(reader["CreatedAt"].ToString() ?? DateTime.MinValue.ToString()),
-                            UpdatedAt = DateTime.Parse(reader["UpdatedAt"].ToString() ?? DateTime.MinValue.ToString())
+                            Created_At = DateTime.Parse(reader["Created_At"].ToString() ?? DateTime.MinValue.ToString()),
+                            Updated_At = DateTime.Parse(reader["Updated_At"].ToString() ?? DateTime.MinValue.ToString())
                         };
 
                         items.Add(item);
@@ -52,33 +79,6 @@ namespace Storage
             return items;
         }
 
-        public CatalogGenre GetById(Guid Id)
-        {
-            var connection = DataBase.GetConnection();
-            {
-                var command = new SQLiteCommand("SELECT * FROM CatalogGenre WHERE ID = @ID", connection);
-                command.Parameters.AddWithValue("@ID", Id.ToString());
-
-                using (var reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        return new CatalogGenre
-                        {
-                            ID = Guid.Parse(reader["ID"].ToString() ?? Guid.Empty.ToString()),
-                            // convertendo ID do banco de TEXT para tipo string e verificando se está NULL
-                            CatalogID = Guid.Parse(reader["ID"].ToString() ?? Guid.Empty.ToString()),
-                            GenreID = Guid.Parse(reader["ID"].ToString() ?? Guid.Empty.ToString()),
-                            
-                            CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
-                            UpdatedAt = Convert.ToDateTime(reader["UpdatedAt"])
-                        };
-                    }
-                }
-            }
-
-            return null!;
-        }
 
         //Class UPDATE
         public void Update(CatalogGenre catalogGenre)
@@ -88,8 +88,8 @@ namespace Storage
                 //query
                 var query = @"UPDATE CatalogGenre
                             SET CatalogID = @CatalogID, GenreID = @GenreID,
-                            UpdatedAt = @UpdatedAt
-                            WHERE Id = @Id";
+                            Updated_At = @Updated_At
+                            WHERE ID = @ID";
                             //WHERE utilizado para fazer alteração SOMENTE naquele ID, evitando que outros livros sejam editados
 
                 using (var command = new SQLiteCommand(query, connection))
@@ -98,8 +98,8 @@ namespace Storage
                     command.Parameters.AddWithValue("@CatalogID", catalogGenre.CatalogID.ToString());
                     command.Parameters.AddWithValue("GenreID", catalogGenre.GenreID.ToString());
                     
-                    command.Parameters.AddWithValue("@UpdatedAt", DateTime.Now);
-                    //como a classe é SOMENTE para atualizar, não é necessário colocar CreatedAt
+                    command.Parameters.AddWithValue("@Updated_At", DateTime.Now);
+                    //como a classe é SOMENTE para atualizar, não é necessário colocar Created_At
 
                     command.ExecuteNonQuery();
                 }
@@ -107,7 +107,7 @@ namespace Storage
         }
 
         //Class DELETE
-        public void Delete(Guid Id)
+        public void Delete(Guid ID)
         {
             var connection = DataBase.GetConnection();
             {
@@ -117,7 +117,7 @@ namespace Storage
 
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@ID", Id.ToString());
+                    command.Parameters.AddWithValue("@ID", ID.ToString());
                     command.ExecuteNonQuery();
                 } 
             }

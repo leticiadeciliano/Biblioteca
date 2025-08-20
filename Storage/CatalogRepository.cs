@@ -2,6 +2,7 @@ using System;
 using Domain;
 using System.Data.SQLite;
 using System.Collections.Generic;
+using Biblioteca.Domain.Interfaces;
 
 //Primeira tentativa de fazer conexão com o Banco
 
@@ -9,7 +10,7 @@ namespace Storage
 {
 
     //Classe para conectar com o ARQUIVO .bd (onde está o Banco de Dados SQLite)
-    public class CatalogRepository
+    public class CatalogRepository : ICatalogRepository
     {
         public void Add(Catalog catalog)
         {
@@ -36,8 +37,8 @@ namespace Storage
             }
         }
 
-        //Classe Listar
-        public List<Catalog> GetAll()
+        //Classe List
+        public IEnumerable<Catalog> GetAll()
         {
             //criando lista
             var catalogs = new List<Catalog>();

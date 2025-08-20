@@ -2,11 +2,12 @@ using System;
 using Domain;
 using System.Data.SQLite;
 using System.Collections.Generic;
+using Biblioteca.Domain.Interfaces;
 
 namespace Storage
 {
 
-    public class LoanRepository
+    public class LoanRepository : ILoanRepository
     {
         public void Add(Loan loan)
         {
@@ -29,7 +30,7 @@ namespace Storage
             }
         }
 
-        public List<Loan> GetAll()
+        public IEnumerable<Loan> GetAll()
         {
             var loans = new List<Loan>();
 
@@ -60,9 +61,6 @@ namespace Storage
             return loans;
         }
 
-
-
-        //Classe GetById
         public Loan GetById(Guid ID)
         {
             var connection = DataBase.GetConnection();
@@ -97,7 +95,6 @@ namespace Storage
         {
             var connection = DataBase.GetConnection();
             {
-                //query
                 var query = @"UPDATE Loan
                             SET days_to_expire = @days_to_expire, ClientID = @ClientID, InventoryID = @InventoryID,
                             UpdatedAt = @UpdatedAt
@@ -120,7 +117,6 @@ namespace Storage
             }
         }
 
-        //Class DELETE
         public void Delete(Guid ID)
         {
             var connection = DataBase.GetConnection();

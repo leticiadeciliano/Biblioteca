@@ -8,8 +8,8 @@ namespace Domain
         public required Guid CatalogID { get; set; }
         public required Guid GenreID { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public DateTime Created_At { get; set; } = DateTime.Now;
+        public DateTime Updated_At { get; set; } = DateTime.Now;
 
     }
 }

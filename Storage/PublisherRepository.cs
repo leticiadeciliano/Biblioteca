@@ -2,11 +2,12 @@ using System;
 using Domain; 
 using System.Data.SQLite;
 using System.Collections.Generic;
+using Biblioteca.Domain.Interfaces;
 
 
 namespace Storage
 {
-    public class PublisherRepository
+    public class PublisherRepository : IPublisherRepository
     {
         public void Add(Publisher publisher)
         {
@@ -25,7 +26,7 @@ namespace Storage
             }
         }
 
-        public List<Publisher> GetAll()
+        public IEnumerable<Publisher> GetAll()
         {
             var publishers = new List<Publisher>();
 
@@ -52,8 +53,6 @@ namespace Storage
             return publishers;
         }
 
-
-        //Classe GetById
         public Publisher GetById(int ID)
         {
             var connection = DataBase.GetConnection();
@@ -69,7 +68,7 @@ namespace Storage
                         {
                             ID = Convert.ToInt32(reader["ID"]),
                             Name_Publisher = Convert.ToString(reader["Name_Publisher"]) ?? "",
-                        
+
                             CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
                             UpdatedAt = Convert.ToDateTime(reader["UpdatedAt"])
                         };
@@ -88,7 +87,7 @@ namespace Storage
                             SET Name_Publisher = @Name_Publisher
                             UpdatedAt = @UpdatedAt
                             WHERE ID = @ID";
-                            
+
                 using (var command = new SQLiteCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@ID", publisher.ID);
@@ -100,7 +99,7 @@ namespace Storage
                 }
             }
         }
-
+        
         public void Delete(int ID)
         {
             var connection = DataBase.GetConnection();
@@ -109,9 +108,9 @@ namespace Storage
 
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@ID", ID);
+                    command.Parameters.AddWithValue("@ID", ID.ToString());
                     command.ExecuteNonQuery();
-                }
+                } 
             }
         }
     }
