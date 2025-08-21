@@ -21,7 +21,7 @@ namespace Service
 
         public List<Catalog> GetAll()
         {
-            return _catalogRepository.GetAll();
+            return (List<Catalog>)_catalogRepository.GetAll();
         }
 
         public Catalog? GetById(Guid ID)
@@ -46,7 +46,7 @@ namespace Service
 
         //Created_At e Updated_At não entram como parâmetro por não ser necessário o Usuário 
         // definir a criação e atualização dos dados
-        public void Create(string title, string author, int number_pages, int year, string description, int publisher_Id, string language_Id)
+        public void Create(string title, string author, int number_pages, int year, string description, string publisher_ID, string language_ID)
         {
             var catalog = new Catalog
             {
@@ -55,8 +55,8 @@ namespace Service
                 Author = author,
                 Year = year,
                 Description = description,
-                Publisher_ID = publisher_Id,
-                Language_ID = language_Id,
+                Publisher_ID = publisher_ID,
+                Language_ID = language_ID,
 
                 Created_At = DateTime.Now,
                 Updated_At = DateTime.Now
@@ -66,7 +66,7 @@ namespace Service
             Console.WriteLine("Catálogo adicionado com sucesso!");
         }
 
-        public void Update(Guid ID, string title, string author, int number_pages, int year, string description, int publisher_Id, string language_Id, bool is_foreign)
+        public void Update(Guid ID, string title, string author, int number_pages, int year, string description, string publisher_ID, string language_ID)
         {
             var existingCatalog = _catalogRepository.GetById(ID);
             if (existingCatalog == null)
@@ -80,8 +80,8 @@ namespace Service
             existingCatalog.Number_pages = number_pages;
             existingCatalog.Year = year;
             existingCatalog.Description = description;
-            existingCatalog.Publisher_ID = publisher_Id;
-            existingCatalog.Language_ID = language_Id;
+            existingCatalog.Publisher_ID = publisher_ID;
+            existingCatalog.Language_ID = language_ID;
 
             existingCatalog.Updated_At = DateTime.Now;
 
@@ -101,5 +101,6 @@ namespace Service
             _catalogRepository.Delete(ID);
             Console.WriteLine("Catálogo removido com sucesso!");
         } //colocar depois condições para excluir a tabela
+
     }
 }

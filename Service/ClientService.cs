@@ -16,7 +16,7 @@ namespace Service
 
         public List<Client> GetAll()
         {
-            return _clientRepository.GetAll();
+            return (List<Client>)_clientRepository.GetAll();
         }
 
         public Client? GetById(Guid ID)
@@ -78,7 +78,7 @@ namespace Service
             if (existingClient == null)
             {
                 Console.WriteLine("Cliente não encontrado.");
-                
+                return;
             }
 
             _clientRepository.Delete(ID);

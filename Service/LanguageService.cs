@@ -16,7 +16,7 @@ namespace Service
 
         public List<Language> GetAll()
         {
-            return _languageRepository.GetAll();
+            return (List<Language>)_languageRepository.GetAll();
         }
 
         public Language? GetById(int ID)
@@ -38,10 +38,11 @@ namespace Service
             return language;
         }
 
-        public void Create(string Name)
+        public void Create(int ID, string Name, Guid LanguageID)
         {
             var language = new Language
             {
+                ID = ID,
                 Name = Name,
                 LanguageID = Guid.NewGuid(),
 
@@ -82,6 +83,11 @@ namespace Service
 
             _languageRepository.Delete(ID);
             Console.WriteLine("Idioma removido com sucesso!");
+        }
+
+        internal void Create(int iD, string name, string languageID)
+        {
+            throw new NotImplementedException();
         }
     }
 }

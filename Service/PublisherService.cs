@@ -16,7 +16,7 @@ namespace Service
 
         public List<Publisher> GetAll()
         {
-            return _publisherRepository.GetAll();
+            return (List<Publisher>)_publisherRepository.GetAll();
         }
 
         public Publisher? GetById(int ID)
@@ -39,11 +39,12 @@ namespace Service
             return publisher;
         }
         
-        public void Create(string name_publisher)
+        public void Create(int ID, string name_Publisher)
         {
             var publisher = new Publisher
             {
-                Name_Publisher = name_publisher,
+                ID = ID,
+                Name_Publisher = name_Publisher,
 
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now

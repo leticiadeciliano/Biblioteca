@@ -16,7 +16,7 @@ namespace Service
 
         public List<Loan> GetAll()
         {
-            return _loanRepository.GetAll();
+            return (List<Loan>)_loanRepository.GetAll();
         }
 
         public Loan? GetById(Guid ID)
@@ -38,13 +38,13 @@ namespace Service
             return loan;
         }
 
-        public void Create(Guid clientID, Guid inventoryID, int days_to_expire)
+        public void Create(Guid clientID,Guid inventoryID, int days_to_expire)
         {
             var loan = new Loan
             {
                 ID = Guid.NewGuid(),
-                ClientID = clientID,
-                InventoryID = inventoryID,
+                ClientID = Guid.NewGuid(),
+                InventoryID = Guid.NewGuid(),
                 CreatedAt = DateTime.Now,
                 Days_to_expire = days_to_expire
             };
@@ -55,18 +55,15 @@ namespace Service
             Console.WriteLine("Empréstimo criado com sucesso!");
         }
 
-        public void Update(Guid ID, Guid clientID, Guid inventoryID, int days_to_expire)
+        public void Update(Guid ID, int days_to_expire)
         {
             var existingloan = _loanRepository.GetById(ID);
             if (existingloan == null)
             {
                 Console.WriteLine("Empréstimo não encontrado.");
                 return;
-            }
+            } //clientID e inventoryID não podem ser alterados pelo usuário, portanto, não deve estar em Update
 
-            existingloan.ID = ID;
-            existingloan.ClientID = clientID;
-            existingloan.InventoryID = inventoryID;
             existingloan.Days_to_expire = days_to_expire;
 
             existingloan.UpdatedAt = DateTime.Now;
@@ -86,6 +83,11 @@ namespace Service
 
             _loanRepository.Delete(ID);
             Console.WriteLine("Empréstimo removido com sucesso!");
+        }
+
+        internal void Update(int newDays)
+        {
+            throw new NotImplementedException();
         }
     }
 }

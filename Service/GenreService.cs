@@ -38,7 +38,7 @@ namespace Service
             return genre;
         }
 
-        public void Create(string name_genre)
+        public void Create(int iD, string name_genre)
         {
             var genre = new Genre
             {

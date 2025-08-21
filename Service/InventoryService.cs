@@ -16,7 +16,7 @@ namespace Service
 
         public List<Inventory> GetAll()
         {
-            return _inventoryRepository.GetAll();
+            return (List<Inventory>)_inventoryRepository.GetAll();
         }
 
         public Inventory? GetById(int ID)
@@ -83,6 +83,11 @@ namespace Service
 
             _inventoryRepository.Delete(ID);
             Console.WriteLine("Inventário removido com sucesso!");
+        }
+
+        internal void Update(int iD, int condition1, string condition, string is_available)
+        {
+            throw new NotImplementedException();
         }
     }
 }
