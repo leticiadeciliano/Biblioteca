@@ -50,96 +50,108 @@ namespace CLI
 
         static void ListLanguage(LanguageService languageService)
         {
-            var languages = languageService.GetAll();
-            Console.WriteLine("\n=== Lista de Idiomas ===");
-            foreach (var language in languages)
+            try
             {
-                Console.WriteLine($"{language.ID} - {language.Name} - {language.LanguageID}");
+                var languages = languageService.GetAll();
+                Console.WriteLine("\n=== Lista de Idiomas ===");
+                foreach (var lang in languages)
+                {
+                    Console.WriteLine($"{lang.ID} - {lang.Name} - {lang.LanguageID}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao listar idiomas.");
+                LogService.Write("ERROR", $"Erro ao listar idiomas: {ex.Message}");
             }
         }
 
         static void CreateLanguage(LanguageService languageService)
         {
-            var ID = PromptHelper.PromptInt("ID: ");
-            var Name = PromptHelper.PromptRequired("Name: ");
-            var LanguageID = PromptHelper.PromptRequired("LanguageID: ");
+            string name = PromptHelper.PromptRequired("Nome do Idioma: ");
 
-            var newlanguage = new Language
-            {
-                ID = ID,
-                Name = Name,
-                LanguageID = Guid.NewGuid(),
-            };
+            // Gera um ID incremental baseado nos existentes
+            int newID = languageService.GetAll().Any() 
+                ? languageService.GetAll().Max(l => l.ID) + 1 
+                : 1;
 
-            languageService.Create(ID, Name, LanguageID);
-            Console.WriteLine("Gênero Criado com Sucesso!");
+            Guid newGuid = Guid.NewGuid();
+
+            // Chama o método existente no Service
+            languageService.Create(newID, name, newGuid);
+
+            Console.WriteLine("Idioma Criado com Sucesso!");
+            LogService.Write("INFO", $"Idioma criado: {name} (ID: {newID}, GUID: {newGuid})");
         }
-
 
         static void GetByIdLanguage(LanguageService languageService)
         {
-            var idInput = PromptHelper.PromptRequired("ID do Gênero");
-
-            if (!int.TryParse(idInput, out int ID))
+            try
             {
-                Console.WriteLine("ID Inválido! Certifique-se de digitar um número inteiro.");
-                return;
+                var input = PromptHelper.PromptInt("Digite o ID do idioma");
+                var lang = languageService.GetById(input);
+
+                if (lang == null)
+                {
+                    Console.WriteLine("Idioma não encontrado.");
+                    return;
+                }
+
+                Console.WriteLine("\n=== Idioma Encontrado ===");
+                Console.WriteLine($"ID: {lang.ID}");
+                Console.WriteLine($"Nome: {lang.Name}");
+                Console.WriteLine($"LanguageID: {lang.LanguageID}");
             }
-
-            var language = languageService.GetById(ID);
-
-            if (language == null)
+            catch (Exception ex)
             {
-                Console.WriteLine("Gênero não encontrado.");
-                return;
+                Console.WriteLine("Erro ao buscar idioma.");
+                LogService.Write("ERROR", $"Erro ao buscar idioma: {ex.Message}");
             }
-
-            Console.WriteLine("\n=== Gênero Encontrado ===");
-            Console.WriteLine($"ID: {language.ID}");
-            Console.WriteLine($"Nome: {language.Name}");
         }
-
-
 
         static void UpdateLanguage(LanguageService languageService)
         {
-            Console.Write("Digite o ID do Gênero a atualizar: ");
-            var input = Console.ReadLine();
-
-            if (!int.TryParse(input, out int ID))
+            try
             {
-                Console.WriteLine("ID Inválido. Operação Cancelada.");
-                return;
-            }
+                var ID = PromptHelper.PromptInt("ID do idioma a atualizar");
+                var lang = languageService.GetById(ID);
 
-            var existinglanguage = languageService.GetById(ID);
-            if (existinglanguage == null)
+                if (lang == null)
+                {
+                    Console.WriteLine("Idioma não encontrado.");
+                    return;
+                }
+
+                var name = PromptHelper.PromptRequired($"Novo nome ({lang.Name}): ");
+
+                // Mantemos LanguageID original
+                languageService.Update(ID, name);
+
+                Console.WriteLine("Idioma atualizado com sucesso!");
+                LogService.Write("INFO", $"Idioma atualizado: {ID}");
+            }
+            catch (Exception ex)
             {
-                Console.WriteLine("Gênero não encontrado.");
-                return;
+                Console.WriteLine("Erro ao atualizar idioma.");
+                LogService.Write("ERROR", $"Erro ao atualizar idioma: {ex.Message}");
             }
-
-            Console.Write("Novo Name_language: ");
-            var name_language = PromptHelper.PromptRequired("Name_language");
-
-            languageService.Update(ID, name_language);
-            Console.WriteLine("Gênero atualizado com sucesso!");
-        } //OBS: O usuário não deve ter acesso a edição do ID para não ter conflito de dados duplicados, por exemplo.
-
+} //OBS: O usuário não deve ter acesso a edição do ID para não ter conflito de dados duplicados, por exemplo.
 
         static void DeleteLanguage(LanguageService languageService)
         {
-            Console.Write("Digite o ID do Gênero a Deletar: ");
-            var input = Console.ReadLine();
-
-            if (!int.TryParse(input, out var ID))
+            try
             {
-                Console.WriteLine("ID Inválido. Operação Cancelada.");
-                return;
-            }
+                var id = PromptHelper.PromptInt("ID do idioma a deletar");
+                languageService.Delete(id);
 
-            languageService.Delete(ID);
-            Console.WriteLine("Gênero Deletado com Sucesso!");
+                Console.WriteLine("Idioma deletado com sucesso!");
+                LogService.Write("INFO", $"Idioma deletado: {id}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao deletar idioma.");
+                LogService.Write("ERROR", $"Erro ao deletar idioma: {ex.Message}");
+            }
         }
     }
 }

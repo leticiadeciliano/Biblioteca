@@ -46,13 +46,14 @@ namespace Service
 
         //Created_At e Updated_At não entram como parâmetro por não ser necessário o Usuário 
         // definir a criação e atualização dos dados
-        public void Create(string title, string author, int number_pages, int year, string description, string publisher_ID, string language_ID)
+        public void Create(Guid guid, string title, string author, int number_pages, int year, string description, int publisher_ID, string language_ID)
         {
             var catalog = new Catalog
             {
                 ID = Guid.NewGuid(),
                 Title = title,
                 Author = author,
+                Number_pages = number_pages,
                 Year = year,
                 Description = description,
                 Publisher_ID = publisher_ID,
@@ -66,7 +67,7 @@ namespace Service
             Console.WriteLine("Catálogo adicionado com sucesso!");
         }
 
-        public void Update(Guid ID, string title, string author, int number_pages, int year, string description, string publisher_ID, string language_ID)
+        public void Update(Guid ID, string title, string author, int number_pages, int year, string description)
         {
             var existingCatalog = _catalogRepository.GetById(ID);
             if (existingCatalog == null)
@@ -80,8 +81,6 @@ namespace Service
             existingCatalog.Number_pages = number_pages;
             existingCatalog.Year = year;
             existingCatalog.Description = description;
-            existingCatalog.Publisher_ID = publisher_ID;
-            existingCatalog.Language_ID = language_ID;
 
             existingCatalog.Updated_At = DateTime.Now;
 

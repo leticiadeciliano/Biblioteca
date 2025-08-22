@@ -52,107 +52,142 @@ namespace CLI
 
         static void ListLoan(LoanService loanService)
         {
-            var loans = loanService.GetAll();
-            Console.WriteLine("\n=== Lista de Empréstimos ===");
-            foreach (var loan in loans)
+            try
             {
-                Console.WriteLine($"{loan.ID} - {loan.ClientID} - {loan.InventoryID} - {loan.Days_to_expire} - {loan.ReturnAt}");
+                var loans = loanService.GetAll();
+                Console.WriteLine("\n=== Lista de Empréstimos ===");
+                foreach (var loan in loans)
+                {
+                    Console.WriteLine($"{loan.ID} - ClientID: {loan.ClientID} - InventoryID: {loan.InventoryID} - Dias até expirar: {loan.Days_to_expire} - Data Empréstimo: {loan.CreatedAt}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao listar empréstimos.");
+                LogService.Write("ERROR", $"Erro ao listar empréstimos: {ex.Message}");
             }
         }
 
         static void CreateLoan(LoanService loanService)
         {
-            // Recebe ClientID e InventoryID como string e converte para Guid
-            var clientIDInput = PromptHelper.PromptRequired("ClientID: ");
-            var inventoryIDInput = PromptHelper.PromptRequired("InventoryID: ");
-
-            if (!Guid.TryParse(clientIDInput, out Guid clientID))
+            try
             {
-                Console.WriteLine("ClientID inválido!");
-                return;
-            }
+                var clientIDInput = PromptHelper.PromptRequired("ClientID: ");
+                if (!Guid.TryParse(clientIDInput, out Guid clientID))
+                {
+                    Console.WriteLine("ClientID inválido! Operação cancelada.");
+                    return;
+                }
 
-            if (!Guid.TryParse(inventoryIDInput, out Guid inventoryID))
+                var inventoryIDInput = PromptHelper.PromptRequired("InventoryID: ");
+                if (!Guid.TryParse(inventoryIDInput, out Guid inventoryID))
+                {
+                    Console.WriteLine("InventoryID inválido! Operação cancelada.");
+                    return;
+                }
+
+                var daysToExpire = PromptHelper.PromptInt("Dias para expiração: ");
+                if (daysToExpire <= 0)
+                {
+                    Console.WriteLine("Número de dias inválido! Operação cancelada.");
+                    return;
+                }
+
+                // Cria empréstimo
+                loanService.Create(clientID, inventoryID, daysToExpire);
+
+                Console.WriteLine("Empréstimo criado com sucesso!");
+                LogService.Write("INFO", $"Empréstimo criado: ClientID {clientID}, InventoryID {inventoryID}, Dias para expiração {daysToExpire}");
+            }
+            catch (Exception ex)
             {
-                Console.WriteLine("InventoryID inválido!");
-                return;
+                Console.WriteLine("Erro ao criar empréstimo. Verifique os dados e tente novamente.");
+                LogService.Write("ERROR", $"Erro ao criar empréstimo: {ex.Message}");
             }
-
-            // Recebe o número de dias de expiração
-            var days_to_expire = PromptHelper.PromptInt("Days_to_expire: ");
-
-            loanService.Create(clientID, inventoryID, days_to_expire);
-
-            Console.WriteLine("Empréstimo criado com sucesso!");
         }
-
-
 
         static void GetByIdLoan(LoanService loanService)
         {
-            var idInput = PromptHelper.PromptRequired("ID do Empréstimo");
-
-            if (!Guid.TryParse(idInput, out Guid ID))
+            try
             {
-                Console.WriteLine("ID Inválido! Certifique-se de digitar um número inteiro.");
-                return;
+                var idInput = PromptHelper.PromptRequired("ID do Empréstimo");
+                if (!Guid.TryParse(idInput, out Guid id))
+                {
+                    Console.WriteLine("ID inválido!");
+                    return;
+                }
+
+                var loan = loanService.GetById(id);
+                if (loan == null)
+                {
+                    Console.WriteLine("Empréstimo não encontrado.");
+                    return;
+                }
+
+                Console.WriteLine($"\nID: {loan.ID}\nClientID: {loan.ClientID}\nInventoryID: {loan.InventoryID}\nDias até expirar: {loan.Days_to_expire}\nData Empréstimo: {loan.CreatedAt}");
             }
-
-            var genre = loanService.GetById(ID);
-
-            if (genre == null)
+            catch (Exception ex)
             {
-                Console.WriteLine("Empréstimo não encontrado.");
-                return;
+                Console.WriteLine("Erro ao buscar empréstimo.");
+                LogService.Write("ERROR", $"Erro ao buscar empréstimo: {ex.Message}");
             }
-
-            Console.WriteLine("\n=== EMpréstimo Encontrado ===");
-            Console.WriteLine($"ID: {genre.ID}");
-            Console.WriteLine($"ClientID: {genre.ClientID}");
-            Console.WriteLine($"InventoryID: {genre.InventoryID}");
-            Console.WriteLine($"Days_to_expire: {genre.Days_to_expire}");
-            Console.WriteLine($"ReturnAt: {genre.ReturnAt}");
         }
 
 
 
         static void UpdateLoan(LoanService loanService)
         {
-            Console.Write("Digite o ID do Empréstimo a atualizar: ");
-            var input = Console.ReadLine();
-
-            if (!Guid.TryParse(input, out Guid ID))
+            try
             {
-                Console.WriteLine("ID Inválido. Operação Cancelada.");
-                return;
-            }
+                var idInput = PromptHelper.PromptRequired("ID do Empréstimo a atualizar");
+                if (!Guid.TryParse(idInput, out Guid id))
+                {
+                    Console.WriteLine("ID inválido!");
+                    return;
+                }
 
-            var existingLoan = loanService.GetById(ID);
-            if (existingLoan == null)
+                var loan = loanService.GetById(id);
+                if (loan == null)
+                {
+                    Console.WriteLine("Empréstimo não encontrado.");
+                    return;
+                }
+
+                var days_to_expire = PromptHelper.PromptInt($"Novo número de dias ({loan.Days_to_expire}): ");
+
+                loanService.Update(id, days_to_expire);
+
+                Console.WriteLine("Empréstimo atualizado com sucesso!");
+                LogService.Write("INFO", $"Empréstimo atualizado: {id}");
+            }
+            catch (Exception ex)
             {
-                Console.WriteLine("Empréstimo não encontrado.");
-                return;
+                Console.WriteLine("Erro ao atualizar empréstimo.");
+                LogService.Write("ERROR", $"Erro ao atualizar empréstimo: {ex.Message}");
             }
-
-            var newDays = PromptHelper.PromptInt("Novo Days_to_expire: ");
-            loanService.Update(newDays);
-        } //OBS: O usuário não deve ter acesso a edição do ID, ClientID e InventoryID por serem informações geradas pelo
-        //código
+        }
 
 
         static void DeleteLoan(LoanService loanService)
         {
-            Console.Write("Digite o ID do Gênero a Deletar: ");
-            var input = Console.ReadLine();
-
-            if (!Guid.TryParse(input, out Guid ID))
+            try
             {
-                Console.WriteLine("ID Inválido. Operação Cancelada.");
-                return;
-            }
+                var idInput = PromptHelper.PromptRequired("ID do Empréstimo a deletar");
+                if (!Guid.TryParse(idInput, out Guid ID))
+                {
+                    Console.WriteLine("ID inválido!");
+                    return;
+                }
 
-            loanService.Delete(ID);
-            Console.WriteLine("Gênero Deletado com Sucesso!");
+                loanService.Delete(ID);
+                Console.WriteLine("Empréstimo deletado com sucesso!");
+                LogService.Write("INFO", $"Empréstimo deletado: {ID}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao deletar empréstimo.");
+                LogService.Write("ERROR", $"Erro ao deletar empréstimo: {ex.Message}");
+            }
         }
     }
 }

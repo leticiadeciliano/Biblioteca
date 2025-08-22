@@ -50,94 +50,107 @@ namespace CLI
 
         static void ListPublisher(PublisherService publisherService)
         {
-            var publishers = publisherService.GetAll();
-            Console.WriteLine("\n=== Lista de Editoras ===");
-            foreach (var publisher in publishers)
+            try
             {
-                Console.WriteLine($"{publisher.ID} - {publisher.Name_Publisher}");
+                var publishers = publisherService.GetAll();
+                Console.WriteLine("\n=== Lista de Editoras ===");
+                foreach (var pub in publishers)
+                {
+                    Console.WriteLine($"{pub.ID} - {pub.Name_Publisher}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao listar editoras.");
+                LogService.Write("ERROR", $"Erro ao listar editoras: {ex.Message}");
             }
         }
 
-        static void CreatePublisher(PublisherService PublisherService)
+        static void CreatePublisher(PublisherService publisherService)
         {
-            var ID = PromptHelper.PromptInt("ID: ");
-            var name_Publisher = PromptHelper.PromptRequired("Name_Publisher: ");
-
-            var newpublisher = new Publisher
+            try
             {
-                ID = ID,
-                Name_Publisher = name_Publisher,
+                var ID = PromptHelper.PromptInt("ID: ");
+                var name_Publisher = PromptHelper.PromptRequired("Name_Publisher: ");
 
-            };
+                var newPublisher = new Publisher
+                {
+                    ID = ID,
+                    Name_Publisher = name_Publisher
+                };
 
-            PublisherService.Create(ID, name_Publisher);
-            Console.WriteLine("Editora Criada com Sucesso!");
+                publisherService.Create(ID, name_Publisher);
+                Console.WriteLine("Editora criada com sucesso!");
+                LogService.Write("INFO", $"Editora criada: {ID} - {name_Publisher}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao criar editora. Verifique os dados e tente novamente.");
+                LogService.Write("ERROR", $"Erro ao criar editora: {ex.Message}");
+            }
         }
 
 
-        static void GetByIdPublisher(PublisherService PublisherService)
+        static void GetByIdPublisher(PublisherService publisherService)
         {
-            var idInput = PromptHelper.PromptRequired("ID da Editora");
-
-            if (!int.TryParse(idInput, out int ID))
+            try
             {
-                Console.WriteLine("ID Inválido! Certifique-se de digitar um número inteiro.");
-                return;
+                var ID = PromptHelper.PromptInt("ID da Editora");
+                var pub = publisherService.GetById(ID);
+                if (pub == null)
+                {
+                    Console.WriteLine("Editora não encontrada.");
+                    return;
+                }
+
+                Console.WriteLine($"ID: {pub.ID}\nNome: {pub.Name_Publisher}");
             }
-
-            var publisher = PublisherService.GetById(ID);
-
-            if (publisher == null)
+            catch (Exception ex)
             {
-                Console.WriteLine("Editora não encontrada.");
-                return;
+                Console.WriteLine("Erro ao buscar editora.");
+                LogService.Write("ERROR", $"Erro ao buscar editora: {ex.Message}");
             }
-
-            Console.WriteLine("\n=== Editora Encontrada ===");
-            Console.WriteLine($"ID: {publisher.ID}");
-            Console.WriteLine($"Nome: {publisher.Name_Publisher}");
         }
 
-
-
-        static void UpdatePublisher(PublisherService PublisherService)
+        static void UpdatePublisher(PublisherService publisherService)
         {
-            Console.Write("Digite o ID da Editora a atualizar: ");
-            var input = Console.ReadLine();
-
-            if (!int.TryParse(input, out int ID))
+            try
             {
-                Console.WriteLine("ID Inválido. Operação Cancelada.");
-                return;
-            }
+                var id = PromptHelper.PromptInt("ID da Editora a atualizar");
+                var pub = publisherService.GetById(id);
+                if (pub == null)
+                {
+                    Console.WriteLine("Editora não encontrada.");
+                    return;
+                }
 
-            var existingGenre = PublisherService.GetById(ID);
-            if (existingGenre == null)
+                var newName = PromptHelper.PromptRequired($"Novo nome ({pub.Name_Publisher}): ");
+                publisherService.Update(id, newName);
+
+                Console.WriteLine("Editora atualizada com sucesso!");
+                LogService.Write("INFO", $"Editora atualizada: {id}");
+            }
+            catch (Exception ex)
             {
-                Console.WriteLine("Editora não encontrada.");
-                return;
+                Console.WriteLine("Erro ao atualizar editora.");
+                LogService.Write("ERROR", $"Erro ao atualizar editora: {ex.Message}");
             }
+        }
 
-            Console.Write("Novo Name_Publisher: ");
-            var Name_Publisher = PromptHelper.PromptRequired("Name_Publisher");
-
-            PublisherService.Update(ID, Name_Publisher);
-            Console.WriteLine("Editora atualizada com sucesso!");
-        } 
-
-        static void DeletePublisher(PublisherService PublisherService)
+        static void DeletePublisher(PublisherService publisherService)
         {
-            Console.Write("Digite o ID da Editora a Deletar: ");
-            var input = Console.ReadLine();
-
-            if (!int.TryParse(input, out var ID))
+            try
             {
-                Console.WriteLine("ID Inválido. Operação Cancelada.");
-                return;
+                var ID = PromptHelper.PromptInt("ID da Editora a deletar");
+                publisherService.Delete(ID);
+                Console.WriteLine("Editora deletada com sucesso!");
+                LogService.Write("INFO", $"Editora deletada: {ID}");
             }
-
-            PublisherService.Delete(ID);
-            Console.WriteLine("Editora Deletada com Sucesso!");
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao deletar editora.");
+                LogService.Write("ERROR", $"Erro ao deletar editora: {ex.Message}");
+            }
         }
     }
 }

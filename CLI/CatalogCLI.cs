@@ -9,15 +9,18 @@ namespace CLI
         public static void Menu()
         {
             var catalogService = new CatalogService();
+            var publisherService = new PublisherService();
+            var genreService = new GenreService();
+            var languageService = new LanguageService();
 
             while (true)
             {
                 Console.WriteLine("\n===== Menu Catálogo =====");
-                Console.WriteLine("1 - Listar Catálogos");
-                Console.WriteLine("2 - Adicionar Catálogo");
-                Console.WriteLine("3 - Procurar pelo ID do Catálogo");
-                Console.WriteLine("4 - Atualizar Catálogo de Livro");
-                Console.WriteLine("5 - Deletar Catálogo");
+                Console.WriteLine("1 - Listar Livros");
+                Console.WriteLine("2 - Cadastrar Livro");
+                Console.WriteLine("3 - Procurar pelo ID");
+                Console.WriteLine("4 - Atualizar Livro");
+                Console.WriteLine("5 - Deletar Livro");
                 Console.WriteLine("0 - Voltar ao Menu Principal");
 
                 var option = Console.ReadLine();
@@ -27,20 +30,26 @@ namespace CLI
                     case "1":
                         ListCatalog(catalogService);
                         break;
+
                     case "2":
-                        CreateCatalog(catalogService);
+                        CreateCatalog(catalogService, publisherService, genreService, languageService);
                         break;
+
                     case "3":
                         GetByIdCatalog(catalogService);
                         break;
+
                     case "4":
-                        UpdateCatalog(catalogService);
+                        UpdateCatalog(catalogService); //futuramente passar publisherService, genreService, languageService p/ ser compatível com o CreateCatalog.
                         break;
+
                     case "5":
                         DeleteCatalog(catalogService);
                         break;
+
                     case "0":
                         return;
+
                     default:
                         Console.WriteLine("Opção inválida!");
                         break;
@@ -50,118 +59,246 @@ namespace CLI
 
         static void ListCatalog(CatalogService catalogService)
         {
-            var catalogs = catalogService.GetAll();
-            Console.WriteLine("\n=== Lista de cataloges ===");
-            foreach (var catalog in catalogs)
+            try
             {
-                Console.WriteLine($"{catalog.ID} - {catalog.Title} - {catalog.Author} - {catalog.Number_pages}  - {catalog.Year} - {catalog.Description} - {catalog.Publisher_ID} - {catalog.Language_ID}");
+                var catalogs = catalogService.GetAll();
+                Console.WriteLine("\n=== Lista de Catálogos ===");
+                foreach (var catalog in catalogs)
+                {
+                    Console.WriteLine($"{catalog.ID} - {catalog.Title} - {catalog.Author} - {catalog.Number_pages} - {catalog.Year} - {catalog.Description} - {catalog.Publisher_ID} - {catalog.Language_ID}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao listar catálogos.");
+                LogService.Write("ERROR", $"Erro ao listar catálogos: {ex.Message}");
             }
         }
 
-        static void CreateCatalog(CatalogService catalogService)
+        //OBS: Fazendo função a mais para, na hora de adicionar um livro, ele tenha a opção de já cadastrar a 
+        //Editora (publisher) e o Gênero (Genre) sem precisar ir no Menu de ambos.
+        static void CreateCatalog(
+            CatalogService catalogService, 
+            PublisherService publisherService, 
+            GenreService genreService, 
+            LanguageService languageService)
         {
-            var title = PromptHelper.PromptRequired("Title: ");
-            var author = PromptHelper.PromptRequired("Author: ");
-            int number_pages = PromptHelper.PromptInt("Number_pages: ");
-            int year = PromptHelper.PromptInt("Year: ");
-            var description = PromptHelper.PromptRequired("Description: ");
-            var publisher_ID = PromptHelper.PromptRequired("Publisher_ID: ");
-            var language_ID = PromptHelper.PromptRequired("Language_ID: ");
+            Console.WriteLine("=== Criar Novo Livro ===");
 
-            var newcatalog = new Catalog
-            {
-                ID = Guid.NewGuid(),
-                Title = title,
-                Author = author,
-                Number_pages = number_pages,
-                Year = year,
-                Description = description,
-                Publisher_ID = publisher_ID,
-                Language_ID = language_ID 
-
-            };
-
-            catalogService.Create(title, author, number_pages, year, description, publisher_ID, language_ID );
-            Console.WriteLine("Catalogo Criado com Sucesso!");
-        }
-
-
-        static void GetByIdCatalog(CatalogService catalogService)
-        {
-            var idInput = PromptHelper.PromptRequired("ID do Catálogo");
-
-            if (!Guid.TryParse(idInput, out Guid ID))
-            {
-                Console.WriteLine("ID Inválido! Certifique-se de digitar um GUID correto.");
-                return;
-            }
-
-            var catalog = catalogService.GetById(ID);
-
-            if (catalog == null)
-            {
-                Console.WriteLine("Catálogo não Encontrado.");
-                return;
-            }
-
-            Console.WriteLine("\n=== cataloge Encontrado ===");
-            Console.WriteLine($"ID: {catalog.ID}");
-            Console.WriteLine($"Nome: {catalog.Title}");
-            Console.WriteLine($"Email: {catalog.Author}");
-            Console.WriteLine($"Telefone: {catalog.Number_pages}");
-            Console.WriteLine($"Nome: {catalog.Year}");
-            Console.WriteLine($"Nome: {catalog.Description}");
-            Console.WriteLine($"Nome: {catalog.Publisher_ID}");
-            Console.WriteLine($"Nome: {catalog.Language_ID}");
-        }
-
-
-        static void UpdateCatalog(CatalogService catalogService)
-        {
-            Console.Write("Digite o ID do Catálogo a Atualizar: ");
-            var input = Console.ReadLine();
-
-            //validando o ID
-            if (!Guid.TryParse(input, out var ID))
-            {
-                Console.WriteLine("ID Inválido. Operação Cancelada.");
-                return;
-            }
-
-            Console.Write("Novo Título: ");
             var title = PromptHelper.PromptRequired("Título");
-            Console.Write("Novo Author: ");
-            var author = PromptHelper.PromptRequired("Author");
-            Console.Write("Novo Número de Páginas: ");
-            var number_pages = PromptHelper.PromptInt("Número de Páginas");
-            Console.Write("Novo Ano: ");
+            var author = PromptHelper.PromptRequired("Autor");
+            var numberPages = PromptHelper.PromptInt("Número de páginas");
             var year = PromptHelper.PromptInt("Ano");
-            Console.Write("Nova Descrição: ");
             var description = PromptHelper.PromptRequired("Descrição");
-            Console.Write("Novo Descrição: ");
-            var  publisher_ID = PromptHelper.PromptRequired("Publisher_ID");
-            Console.Write("Novo Publisher_ID: ");
-            var language_ID = PromptHelper.PromptRequired("Language_ID");
-            Console.Write("Novo Language_ID: ");
 
+            //Publisher
+            Console.WriteLine("Editoras já cadastradas: ");
+            foreach (var pub in publisherService.GetAll())
+                Console.WriteLine($"{pub.ID} - {pub.Name_Publisher}");
 
-            catalogService.Update(ID, title, author, number_pages, year, description, publisher_ID, language_ID);
-            Console.WriteLine("Catálogo Atualizado com Sucesso!");
-        }
+            string publisherChoice = PromptHelper.PromptRequired("Digite o ID da Editora existente ou digite 'novo' para criar");
+            int publisherID;
 
-        static void DeleteCatalog(CatalogService catalogService)
-        {
-            Console.Write("Digite o ID do Catálogo a Deletar: ");
-            var input = Console.ReadLine();
-
-            if (!Guid.TryParse(input, out var ID))
+            if (publisherChoice.ToLower() == "novo")
             {
-                Console.WriteLine("ID Inválido. Operação Cancelada.");
-                return;
+                int ID = publisherService.GetAll().Any() ? publisherService.GetAll().Max(p => p.ID) + 1 : 1;
+                string newPublisherName = PromptHelper.PromptRequired("Nome da nova Editora: ");
+
+                publisherService.Create(ID, newPublisherName);
+
+                var created = publisherService.GetAll().FirstOrDefault(p => p.Name_Publisher == newPublisherName);
+                if (created == null)
+                {
+                    Console.WriteLine("Erro ao criar Publisher.");
+                    return;
+                }
+                publisherID = created.ID;
+            }
+            else
+            {
+                publisherID = int.Parse(publisherChoice);
             }
 
-            catalogService.Delete(ID);
-            Console.WriteLine("Catálogo Deletado com Sucesso!");
+            //Genre
+            Console.WriteLine("Gêneros existentes:");
+            foreach (var g in genreService.GetAll())
+                Console.WriteLine($"{g.ID} - {g.Name_genre}");
+
+            string genreChoice = PromptHelper.PromptRequired("Digite o ID do Genre existente ou 'novo' para criar");
+            int genreID;
+
+            if (genreChoice.ToLower() == "novo")
+            {
+                string newGenreName = PromptHelper.PromptRequired("Nome do novo Gênero: ");
+                genreService.Create(newGenreName);
+
+                var createdGenre = genreService.GetAll().FirstOrDefault(g => g.Name_genre == newGenreName);
+                if (createdGenre == null)
+                {
+                    Console.WriteLine("Erro ao criar Genre.");
+                    return;
+                }
+                genreID = createdGenre.ID;
+            }
+            else
+            {
+                genreID = int.Parse(genreChoice);
+            }
+
+            //Language
+            Console.WriteLine("Idiomas existentes:");
+            foreach (var lang in languageService.GetAll())
+                Console.WriteLine($"{lang.ID} - {lang.Name}");
+
+            string languageChoice = PromptHelper.PromptRequired("Digite o ID do Language existente ou 'novo' para criar");
+            int languageID;
+
+            if (languageChoice.ToLower() == "novo")
+            {
+                int newLanguageID = languageService.GetAll().Any()
+                    ? languageService.GetAll().Max(l => l.ID) + 1
+                    : 1;
+
+                string newLanguageName = PromptHelper.PromptRequired("Nome do novo Language: ");
+                languageService.Create(newLanguageID, newLanguageName, Guid.NewGuid());
+
+                var createdLang = languageService.GetAll().FirstOrDefault(l => l.Name == newLanguageName);
+                if (createdLang == null)
+                {
+                    Console.WriteLine("Erro ao criar Language.");
+                    return;
+                }
+                languageID = createdLang.ID;
+            }
+            else
+            {
+                languageID = int.Parse(languageChoice);
+            }
+
+            //Criar Catalog
+            try
+            {
+                Guid catalogID = Guid.NewGuid();
+
+                catalogService.Create(
+                    catalogID,
+                    title,
+                    author,
+                    numberPages,
+                    year,
+                    description,
+                    publisherID,
+                    languageID.ToString()
+                );
+
+                Console.WriteLine("Livro criado com sucesso!");
+                LogService.Write("INFO", $"Livro criado: {title} (ID: {catalogID})");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ocorreu um erro ao criar o livro.");
+                LogService.Write("ERROR", $"Erro ao criar livro: {ex.Message}");
+            }
+        }
+
+            static void GetByIdCatalog(CatalogService catalogService)
+            {
+                try
+                {
+                    var idInput = PromptHelper.PromptRequired("ID do Catálogo");
+
+                    if (!Guid.TryParse(idInput, out Guid ID))
+                    {
+                        Console.WriteLine("ID inválido!");
+                        return;
+                    }
+
+                    var catalog = catalogService.GetById(ID);
+                    if (catalog == null)
+                    {
+                        Console.WriteLine("Catálogo não encontrado.");
+                        return;
+                    }
+
+                    Console.WriteLine("\n=== Catálogo Encontrado ===");
+                    Console.WriteLine($"ID: {catalog.ID}");
+                    Console.WriteLine($"Título: {catalog.Title}");
+                    Console.WriteLine($"Autor: {catalog.Author}");
+                    Console.WriteLine($"Número de Páginas: {catalog.Number_pages}");
+                    Console.WriteLine($"Ano: {catalog.Year}");
+                    Console.WriteLine($"Descrição: {catalog.Description}");
+                    Console.WriteLine($"Publisher ID: {catalog.Publisher_ID}");
+                    Console.WriteLine($"Language ID: {catalog.Language_ID}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Erro ao buscar catálogo.");
+                    LogService.Write("ERROR", $"Erro ao buscar catálogo: {ex.Message}");
+                }
+            }
+
+            static void UpdateCatalog(CatalogService catalogService)
+            {
+                try
+                {
+                    var idInput = PromptHelper.PromptRequired("ID do Catálogo a atualizar");
+
+                    if (!Guid.TryParse(idInput, out Guid ID))
+                    {
+                        Console.WriteLine("ID inválido!");
+                        return;
+                    }
+
+                    var catalog = catalogService.GetById(ID);
+                    if (catalog == null)
+                    {
+                        Console.WriteLine("Catálogo não encontrado.");
+                        return;
+                    }
+
+                    var title = PromptHelper.PromptRequired($"Novo título ({catalog.Title}): ");
+                    var author = PromptHelper.PromptRequired($"Novo autor ({catalog.Author}): ");
+                    var numberPages = PromptHelper.PromptInt($"Novo número de páginas ({catalog.Number_pages}): ");
+                    var year = PromptHelper.PromptInt($"Novo ano ({catalog.Year}): ");
+                    var description = PromptHelper.PromptRequired($"Nova descrição ({catalog.Description}): ");
+
+                    // Mantemos PublisherID e LanguageID originais
+                    catalogService.Update(ID, title, author, numberPages, year, description);
+
+                    Console.WriteLine("Catálogo atualizado com sucesso!");
+                    LogService.Write("INFO", $"Catálogo atualizado: {ID} - {title}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Erro ao atualizar catálogo.");
+                    LogService.Write("ERROR", $"Erro ao atualizar catálogo: {ex.Message}");
+                }
+            }
+
+
+
+
+            static void DeleteCatalog(CatalogService catalogService)
+            {
+                try
+                {
+                    var idInput = PromptHelper.PromptRequired("ID do Catálogo a deletar");
+
+                    if (!Guid.TryParse(idInput, out Guid ID))
+                    {
+                        Console.WriteLine("ID inválido!");
+                        return;
+                    }
+
+                    catalogService.Delete(ID);
+                    Console.WriteLine("Catálogo deletado com sucesso!");
+                    LogService.Write("INFO", $"Catálogo deletado: {ID}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Erro ao deletar catálogo.");
+                    LogService.Write("ERROR", $"Erro ao deletar catálogo: {ex.Message}");
+                }
+            }
         }
     }
-}

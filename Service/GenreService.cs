@@ -16,7 +16,7 @@ namespace Service
 
         public List<Genre> GetAll()
         {
-            return _genreRepository.GetAll();
+            return (List<Genre>)_genreRepository.GetAll();
         }
 
         public Genre? GetById(int ID)
@@ -38,7 +38,7 @@ namespace Service
             return genre;
         }
 
-        public void Create(int iD, string name_genre)
+        public void Create(string name_genre)
         {
             var genre = new Genre
             {

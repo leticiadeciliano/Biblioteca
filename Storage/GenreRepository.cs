@@ -102,5 +102,15 @@ namespace Storage
                 }
             }
         }
+
+        internal Genre GetById(int iD)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void Delete(int iD)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

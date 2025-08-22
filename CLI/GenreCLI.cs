@@ -48,97 +48,114 @@ namespace CLI
             }
         }
 
-        static void ListGenre(GenreService GenreService)
+        static void ListGenre(GenreService genreService)
         {
-            var genres = GenreService.GetAll();
-            Console.WriteLine("\n=== Lista de Gêneros ===");
-            foreach (var genre in genres)
+            try
             {
-                Console.WriteLine($"{genre.ID} - {genre.Name_genre}");
+                var genres = genreService.GetAll();
+                Console.WriteLine("\n=== Lista de Gêneros ===");
+                foreach (var genre in genres)
+                {
+                    Console.WriteLine($"{genre.ID} - {genre.Name_genre}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao listar gêneros.");
+                LogService.Write("ERROR", $"Erro ao listar gêneros: {ex.Message}");
             }
         }
 
-        static void CreateGenre(GenreService GenreService)
+
+        static void CreateGenre(GenreService genreService)
         {
-            var ID = PromptHelper.PromptInt("ID: ");
-            var Name_genre = PromptHelper.PromptRequired("Name_genre: ");
-
-            var newgenre = new Genre
+            try
             {
-                ID = ID,
-                Name_genre = Name_genre,
+                var name_genre = PromptHelper.PromptRequired("Nome do Gênero: ");
 
-            };
+                genreService.Create(name_genre);
 
-            GenreService.Create(ID, Name_genre);
-            Console.WriteLine("Gênero Criado com Sucesso!");
+                Console.WriteLine("Gênero criado com sucesso!");
+                LogService.Write("INFO", $"Gênero criado: {name_genre}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao criar gênero. Verifique os dados e tente novamente.");
+                LogService.Write("ERROR", $"Erro ao criar gênero: {ex.Message}");
+            }
         }
-
 
         static void GetByIdGenre(GenreService genreService)
         {
-            var idInput = PromptHelper.PromptRequired("ID do Gênero");
-
-            if (!int.TryParse(idInput, out int ID))
+            try
             {
-                Console.WriteLine("ID Inválido! Certifique-se de digitar um número inteiro.");
-                return;
+                var idInput = PromptHelper.PromptInt("ID do Gênero");
+
+                var genre = genreService.GetById(idInput);
+                if (genre == null)
+                {
+                    Console.WriteLine("Gênero não encontrado.");
+                    return;
+                }
+
+                Console.WriteLine("\n=== Gênero Encontrado ===");
+                Console.WriteLine($"ID: {genre.ID}");
+                Console.WriteLine($"Nome: {genre.Name_genre}");
             }
-
-            var genre = genreService.GetById(ID);
-
-            if (genre == null)
+            catch (Exception ex)
             {
-                Console.WriteLine("Gênero não encontrado.");
-                return;
+                Console.WriteLine("Erro ao buscar gênero.");
+                LogService.Write("ERROR", $"Erro ao buscar gênero: {ex.Message}");
             }
-
-            Console.WriteLine("\n=== Gênero Encontrado ===");
-            Console.WriteLine($"ID: {genre.ID}");
-            Console.WriteLine($"Nome: {genre.Name_genre}");
         }
+
 
 
 
         static void UpdateGenre(GenreService genreService)
         {
-            Console.Write("Digite o ID do Gênero a atualizar: ");
-            var input = Console.ReadLine();
-
-            if (!int.TryParse(input, out int ID))
+            try
             {
-                Console.WriteLine("ID Inválido. Operação Cancelada.");
-                return;
-            }
+                var idInput = PromptHelper.PromptInt("ID do Gênero a atualizar");
 
-            var existingGenre = genreService.GetById(ID);
-            if (existingGenre == null)
+                var genre = genreService.GetById(idInput);
+                if (genre == null)
+                {
+                    Console.WriteLine("Gênero não encontrado.");
+                    return;
+                }
+
+                var newName = PromptHelper.PromptRequired($"Novo nome ({genre.Name_genre}): ");
+
+                genreService.Update(idInput, newName);
+
+                Console.WriteLine("Gênero atualizado com sucesso!");
+                LogService.Write("INFO", $"Gênero atualizado: {idInput} - {newName}");
+            }
+            catch (Exception ex)
             {
-                Console.WriteLine("Gênero não encontrado.");
-                return;
+                Console.WriteLine("Erro ao atualizar gênero.");
+                LogService.Write("ERROR", $"Erro ao atualizar gênero: {ex.Message}");
             }
-
-            Console.Write("Novo Name_genre: ");
-            var name_genre = PromptHelper.PromptRequired("Name_genre");
-
-            genreService.Update(ID, name_genre);
-            Console.WriteLine("Gênero atualizado com sucesso!");
         } //OBS: O usuário não deve ter acesso a edição do ID para não ter conflito de dados duplicados, por exemplo.
 
 
-        static void DeleteGenre(GenreService GenreService)
+        static void DeleteGenre(GenreService genreService)
         {
-            Console.Write("Digite o ID do Gênero a Deletar: ");
-            var input = Console.ReadLine();
-
-            if (!int.TryParse(input, out var ID))
+            try
             {
-                Console.WriteLine("ID Inválido. Operação Cancelada.");
-                return;
-            }
+                var idInput = PromptHelper.PromptInt("ID do Gênero a deletar");
 
-            GenreService.Delete(ID);
-            Console.WriteLine("Gênero Deletado com Sucesso!");
+                genreService.Delete(idInput);
+
+                Console.WriteLine("Gênero deletado com sucesso!");
+                LogService.Write("INFO", $"Gênero deletado: {idInput}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao deletar gênero.");
+                LogService.Write("ERROR", $"Erro ao deletar gênero: {ex.Message}");
+            }
         }
     }
 }

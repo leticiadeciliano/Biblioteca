@@ -25,7 +25,7 @@ namespace CLI
                 switch (option)
                 {
                     case "1":
-                        ListClients(clientService);
+                        ListClient(clientService);
                         break;
                     case "2":
                         CreateClient(clientService);
@@ -48,98 +48,143 @@ namespace CLI
             }
         }
 
-        static void ListClients(ClientService clientService)
+        static void ListClient(ClientService clientService)
         {
-            var clients = clientService.GetAll();
-            Console.WriteLine("\n=== Lista de Clientes ===");
-            foreach (var client in clients)
+            try
             {
-                Console.WriteLine($"{client.ID} - {client.Name} - {client.Email} - {client.Phone}");
+                var clients = clientService.GetAll();
+                Console.WriteLine("\n=== Lista de Clientes ===");
+                foreach (var client in clients)
+                {
+                    Console.WriteLine($"{client.ID} - {client.Name} - {client.Email} - {client.Phone}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao listar clientes.");
+                LogService.Write("ERROR", $"Erro ao listar clientes: {ex.Message}");
             }
         }
 
+
         static void CreateClient(ClientService clientService)
         {
-            var name = PromptHelper.PromptRequired("Nome: ");
-            var email = PromptHelper.PromptRequired("Email: ");
-            var phone = PromptHelper.PromptRequired("Telefone: ");
+            try
+                {
+                    var name = PromptHelper.PromptRequired("Nome: ");
+                    var email = PromptHelper.PromptRequired("Email: ");
+                    var phone = PromptHelper.PromptRequired("Telefone: ");
 
-            var newClient = new Client
-            {
-                ID = Guid.NewGuid(),
-                Name = name,
-                Email = email,
-                Phone = phone
-            };
+                    var newClient = new Client
+                    {
+                        ID = Guid.NewGuid(),
+                        Name = name,
+                        Email = email,
+                        Phone = phone
+                    };
 
-            clientService.Create(name, email, phone);
-            Console.WriteLine("Cliente criado com Sucesso!");
+                    clientService.Create(name, email, phone);
+                    Console.WriteLine("Cliente criado com Sucesso!");
+
+                    LogService.Write("INFO", $"Cliente criado: {newClient.ID} - {newClient.Name} - {newClient.Email} - {newClient.Phone}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Erro ao criar cliente. Verifique os dados e tente novamente.");
+                    LogService.Write("ERROR", $"Erro ao criar cliente: {ex.Message}");
+                }
         }
 
 
         static void GetByIdClient(ClientService clientService)
         {
-            var idInput = PromptHelper.PromptRequired("ID do Cliente");
-
-            //Convertendo de ID para GUID
-            if (!Guid.TryParse(idInput, out Guid ID))
+            try
             {
-                Console.WriteLine("ID Inválido! Certifique-se de digitar um GUID correto.");
-                return;
+                var idInput = PromptHelper.PromptRequired("ID do Cliente");
+
+                if (!Guid.TryParse(idInput, out Guid ID))
+                {
+                    Console.WriteLine("ID inválido!");
+                    return;
+                }
+
+                var client = clientService.GetById(ID);
+                if (client == null)
+                {
+                    Console.WriteLine("Cliente não encontrado.");
+                    return;
+                }
+
+                Console.WriteLine("\n=== Cliente Encontrado ===");
+                Console.WriteLine($"ID: {client.ID}");
+                Console.WriteLine($"Nome: {client.Name}");
+                Console.WriteLine($"Email: {client.Email}");
+                Console.WriteLine($"Telefone: {client.Phone}");
             }
-
-            var client = clientService.GetById(ID);
-
-            if (client == null)
+            catch (Exception ex)
             {
-                Console.WriteLine("Cliente não Encontrado.");
-                return;
+                Console.WriteLine("Erro ao buscar cliente.");
+                LogService.Write("ERROR", $"Erro ao buscar cliente: {ex.Message}");
             }
-
-            Console.WriteLine("\n=== Cliente Encontrado ===");
-            Console.WriteLine($"ID: {client.ID}");
-            Console.WriteLine($"Nome: {client.Name}");
-            Console.WriteLine($"Email: {client.Email}");
-            Console.WriteLine($"Telefone: {client.Phone}");
         }
-
 
         static void UpdateClient(ClientService clientService)
         {
-            Console.Write("Digite o ID do Cliente a Atualizar: ");
-            var input = Console.ReadLine();
-
-            //validando o ID
-            if (!Guid.TryParse(input, out var ID))
+            try
             {
-                Console.WriteLine("ID Inválido. Operação Cancelada.");
-                return;
+                var idInput = PromptHelper.PromptRequired("ID do Cliente a atualizar");
+
+                if (!Guid.TryParse(idInput, out Guid ID))
+                {
+                    Console.WriteLine("ID inválido!");
+                    return;
+                }
+
+                var client = clientService.GetById(ID);
+                if (client == null)
+                {
+                    Console.WriteLine("Cliente não encontrado.");
+                    return;
+                }
+
+                var name = PromptHelper.PromptRequired($"Novo nome ({client.Name}): ");
+                var email = PromptHelper.PromptRequired($"Novo email ({client.Email}): ");
+                var phone = PromptHelper.PromptRequired($"Novo telefone ({client.Phone}): ");
+
+                clientService.Update(ID, name, email, phone);
+
+                Console.WriteLine("Cliente atualizado com sucesso!");
+                LogService.Write("INFO", $"Cliente atualizado: {ID} - {name}");
             }
-
-            Console.Write("Novo Nome: ");
-            var name = PromptHelper.PromptRequired("Nome");
-            Console.Write("Novo Email: ");
-            var email = PromptHelper.PromptRequired("Email");
-            Console.Write("Novo Telefone: ");
-            var phone = PromptHelper.PromptRequired("Telefone");
-
-            clientService.Update(ID, name, email, phone);
-            Console.WriteLine("Cliente Atualizado com Sucesso!");
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao atualizar cliente.");
+                LogService.Write("ERROR", $"Erro ao atualizar cliente: {ex.Message}");
+            }
         }
+
 
         static void DeleteClient(ClientService clientService)
         {
-            Console.Write("Digite o ID do Cliente a Deletar: ");
-            var input = Console.ReadLine();
-
-            if (!Guid.TryParse(input, out var ID))
+            try
             {
-                Console.WriteLine("ID Inválido. Operação Cancelada.");
-                return;
-            }
+                var idInput = PromptHelper.PromptRequired("ID do Cliente a deletar");
 
-            clientService.Delete(ID);
-            Console.WriteLine("Cliente Deletado com Sucesso!");
+                if (!Guid.TryParse(idInput, out Guid ID))
+                {
+                    Console.WriteLine("ID inválido!");
+                    return;
+                }
+
+                clientService.Delete(ID);
+                Console.WriteLine("Cliente deletado com sucesso!");
+                LogService.Write("INFO", $"Cliente deletado: {ID}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao deletar cliente.");
+                LogService.Write("ERROR", $"Erro ao deletar cliente: {ex.Message}");
+            }
         }
     }
 }

@@ -91,6 +91,6 @@ namespace Service
 
             _publisherRepository.Delete(ID);
             Console.WriteLine("Editora removida com sucesso!");
-        } 
+        }
     }
 }
