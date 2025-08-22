@@ -66,7 +66,7 @@ namespace Service
             existingGenre.Updated_At = DateTime.Now;
 
             _genreRepository.Update(existingGenre);
-            Console.WriteLine("Cliente atualizado com sucesso!");
+            Console.WriteLine("Gênero atualizado com sucesso!");
         }
 
         public void Delete(int ID)

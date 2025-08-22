@@ -22,6 +22,7 @@ namespace CLI
                 Console.WriteLine("5 - Deletar Empréstimo");
                 Console.WriteLine("0 - Voltar ao Menu Principal");
 
+                Console.Write("Escolha uma opção: ");
                 var option = Console.ReadLine();
 
                 switch (option)
@@ -65,6 +66,7 @@ namespace CLI
             {
                 Console.WriteLine("Erro ao listar empréstimos.");
                 LogService.Write("ERROR", $"Erro ao listar empréstimos: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -103,6 +105,7 @@ namespace CLI
             {
                 Console.WriteLine("Erro ao criar empréstimo. Verifique os dados e tente novamente.");
                 LogService.Write("ERROR", $"Erro ao criar empréstimo: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -130,6 +133,7 @@ namespace CLI
             {
                 Console.WriteLine("Erro ao buscar empréstimo.");
                 LogService.Write("ERROR", $"Erro ao buscar empréstimo: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -164,6 +168,7 @@ namespace CLI
             {
                 Console.WriteLine("Erro ao atualizar empréstimo.");
                 LogService.Write("ERROR", $"Erro ao atualizar empréstimo: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -187,6 +192,7 @@ namespace CLI
             {
                 Console.WriteLine("Erro ao deletar empréstimo.");
                 LogService.Write("ERROR", $"Erro ao deletar empréstimo: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
     }

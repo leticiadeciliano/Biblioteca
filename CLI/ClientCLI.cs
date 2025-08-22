@@ -20,6 +20,7 @@ namespace CLI
                 Console.WriteLine("5 - Deletar Cliente");
                 Console.WriteLine("0 - Voltar ao Menu Principal");
 
+                Console.Write("Escolha uma opção: ");
                 var option = Console.ReadLine();
 
                 switch (option)
@@ -63,6 +64,7 @@ namespace CLI
             {
                 Console.WriteLine("Erro ao listar clientes.");
                 LogService.Write("ERROR", $"Erro ao listar clientes: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -70,28 +72,29 @@ namespace CLI
         static void CreateClient(ClientService clientService)
         {
             try
+            {
+                var name = PromptHelper.PromptRequired("Nome: ");
+                var email = PromptHelper.PromptRequired("Email: ");
+                var phone = PromptHelper.PromptRequired("Telefone: ");
+
+                var newClient = new Client
                 {
-                    var name = PromptHelper.PromptRequired("Nome: ");
-                    var email = PromptHelper.PromptRequired("Email: ");
-                    var phone = PromptHelper.PromptRequired("Telefone: ");
+                    ID = Guid.NewGuid(),
+                    Name = name,
+                    Email = email,
+                    Phone = phone
+                };
 
-                    var newClient = new Client
-                    {
-                        ID = Guid.NewGuid(),
-                        Name = name,
-                        Email = email,
-                        Phone = phone
-                    };
+                clientService.Create(name, email, phone);
+                Console.WriteLine("Cliente criado com Sucesso!");
 
-                    clientService.Create(name, email, phone);
-                    Console.WriteLine("Cliente criado com Sucesso!");
-
-                    LogService.Write("INFO", $"Cliente criado: {newClient.ID} - {newClient.Name} - {newClient.Email} - {newClient.Phone}");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Erro ao criar cliente. Verifique os dados e tente novamente.");
-                    LogService.Write("ERROR", $"Erro ao criar cliente: {ex.Message}");
+                LogService.Write("INFO", $"Cliente criado: {newClient.ID} - {newClient.Name} - {newClient.Email} - {newClient.Phone}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao criar cliente. Verifique os dados e tente novamente.");
+                LogService.Write("ERROR", $"Erro ao criar cliente: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
                 }
         }
 
@@ -125,6 +128,7 @@ namespace CLI
             {
                 Console.WriteLine("Erro ao buscar cliente.");
                 LogService.Write("ERROR", $"Erro ao buscar cliente: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -160,6 +164,7 @@ namespace CLI
             {
                 Console.WriteLine("Erro ao atualizar cliente.");
                 LogService.Write("ERROR", $"Erro ao atualizar cliente: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -184,6 +189,7 @@ namespace CLI
             {
                 Console.WriteLine("Erro ao deletar cliente.");
                 LogService.Write("ERROR", $"Erro ao deletar cliente: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
     }

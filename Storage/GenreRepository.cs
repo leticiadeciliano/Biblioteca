@@ -8,7 +8,7 @@ namespace Storage
     {
         public void Add(Genre genre)
         {
-            using (var connection = DataBase.GetConnection())
+            var connection = DataBase.GetConnection();
             {
                 string query = @"INSERT INTO Genre (Name_genre, Created_At, Updated_At) 
                                  VALUES (@Name_genre, @Created_At, @Updated_At)";
@@ -22,12 +22,12 @@ namespace Storage
             }
         }
 
-        public Genre GetById(Guid id)
+        public Genre GetById(int ID)
         {
-            using (var connection = DataBase.GetConnection())
+            var connection = DataBase.GetConnection();
             {
                 var command = new SQLiteCommand("SELECT * FROM Genre WHERE ID = @ID", connection);
-                command.Parameters.AddWithValue("@ID", id.ToString());
+                command.Parameters.AddWithValue("@ID", ID.ToString());
 
                 using (var reader = command.ExecuteReader())
                 {
@@ -43,14 +43,14 @@ namespace Storage
                     }
                 }
             }
-            throw new Exception($"Gênero com ID {id} não encontrado.");
+            throw new Exception($"Gênero com ID {ID} não encontrado.");
         }
 
         public IEnumerable<Genre> GetAll()
         {
             var genres = new List<Genre>();
 
-            using (var connection = DataBase.GetConnection())
+            var connection = DataBase.GetConnection();
             {
                 var query = "SELECT * FROM Genre";
                 using (var command = new SQLiteCommand(query, connection))
@@ -73,7 +73,7 @@ namespace Storage
 
         public void Update(Genre genre)
         {
-            using (var connection = DataBase.GetConnection())
+            var connection = DataBase.GetConnection();
             {
                 var query = @"UPDATE Genre
                               SET Name_genre = @Name_genre,
@@ -90,9 +90,9 @@ namespace Storage
             }
         }
 
-        public void Delete(Guid ID)
+        public void Delete(int ID)
         {
-            using (var connection = DataBase.GetConnection())
+            var connection = DataBase.GetConnection();
             {
                 var query = "DELETE FROM Genre WHERE ID = @ID";
                 using (var command = new SQLiteCommand(query, connection))
@@ -101,16 +101,6 @@ namespace Storage
                     command.ExecuteNonQuery();
                 }
             }
-        }
-
-        internal Genre GetById(int iD)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal void Delete(int iD)
-        {
-            throw new NotImplementedException();
         }
     }
 }

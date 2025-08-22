@@ -7,10 +7,7 @@ namespace Domain
         public int ID { get; set; }
         public required string Name { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
-
-        //Foreign Key
-        public required Guid LanguageID { get; set; }
+        public DateTime Created_At { get; set; } = DateTime.Now;
+        public DateTime Updated_At { get; set; } = DateTime.Now;
     }
 }

@@ -44,10 +44,9 @@ namespace Service
             {
                 ID = ID,
                 Name = Name,
-                LanguageID = Guid.NewGuid(),
 
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
+                Created_At = DateTime.Now,
+                Updated_At = DateTime.Now
             };
 
             _languageRepository.Add(language);
@@ -66,7 +65,7 @@ namespace Service
 
             existinglanguage.Name = Name;
             
-            existinglanguage.UpdatedAt = DateTime.Now;
+            existinglanguage.Updated_At = DateTime.Now;
 
             _languageRepository.Update(existinglanguage);
             Console.WriteLine("Idioma atualizado com sucesso!");

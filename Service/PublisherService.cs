@@ -32,22 +32,22 @@ namespace Service
 
             if (publisher == null)
             {
-                Console.WriteLine("Catálogo não encontrado.");
+                Console.WriteLine("Editora não encontrada.");
                 return null;
             }
 
             return publisher;
         }
         
-        public void Create(int ID, string name_Publisher)
+        public void Create(int ID, string name)
         {
             var publisher = new Publisher
             {
                 ID = ID,
-                Name_Publisher = name_Publisher,
+                Name = name,
 
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
+                Created_At = DateTime.Now,
+                Updated_At = DateTime.Now
             };
 
             // USAR FUTURAMENTE
@@ -63,7 +63,7 @@ namespace Service
             Console.WriteLine("Editora adicionada com sucesso!");
         }
 
-        public void Update(int ID, string name_publisher)
+        public void Update(int ID, string name)
         {
             var existingPublisher = _publisherRepository.GetById(ID);
             if (existingPublisher == null)
@@ -72,9 +72,9 @@ namespace Service
                 return;
             }
 
-            existingPublisher.Name_Publisher = name_publisher;
+            existingPublisher.Name = name;
 
-            existingPublisher.UpdatedAt = DateTime.Now;
+            existingPublisher.Updated_At = DateTime.Now;
 
             _publisherRepository.Update(existingPublisher);
             Console.WriteLine("Editora atualizada com sucesso!");

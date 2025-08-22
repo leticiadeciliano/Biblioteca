@@ -16,19 +16,19 @@ namespace Service
 
         public List<CatalogGenre> GetAll()
         {
-            return _catalogGenreRepository.GetAll();
+            return (List<CatalogGenre>)_catalogGenreRepository.GetAll();
         }
 
-        public CatalogGenre? GetById(Guid Id)
+        public CatalogGenre? GetById(Guid ID)
         // ? solicita para retornar NULL caso não encontre
         {
-            if (Id == Guid.Empty)
+            if (ID == Guid.Empty)
             {
                 Console.WriteLine("ID inválido.");
                 return null;
             }
 
-            var catalogGenre = _catalogGenreRepository.GetById(Id);
+            var catalogGenre = _catalogGenreRepository.GetById(ID);
 
             if (catalogGenre == null)
             {
@@ -46,8 +46,8 @@ namespace Service
                 ID = Guid.NewGuid(),
                 CatalogID = catalogID,
                 GenreID = genreID,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
+                Created_At = DateTime.Now,
+                Updated_At = DateTime.Now
             };
 
             _catalogGenreRepository.Add(catalogGenre);
@@ -67,7 +67,7 @@ namespace Service
             existingCatalogGenre.GenreID = genreID;
             
 
-            existingCatalogGenre.UpdatedAt = DateTime.Now;
+            existingCatalogGenre.Updated_At = DateTime.Now;
 
             _catalogGenreRepository.Update(existingCatalogGenre);
             Console.WriteLine("Gênero de Catálogo atualizado com sucesso!");

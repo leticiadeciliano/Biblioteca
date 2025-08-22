@@ -20,6 +20,7 @@ namespace CLI
                 Console.WriteLine("5 - Deletar Gênero");
                 Console.WriteLine("0 - Voltar ao Menu Principal");
 
+                Console.Write("Escolha uma opção: ");
                 var option = Console.ReadLine();
 
                 switch (option)
@@ -63,6 +64,7 @@ namespace CLI
             {
                 Console.WriteLine("Erro ao listar gêneros.");
                 LogService.Write("ERROR", $"Erro ao listar gêneros: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -82,6 +84,7 @@ namespace CLI
             {
                 Console.WriteLine("Erro ao criar gênero. Verifique os dados e tente novamente.");
                 LogService.Write("ERROR", $"Erro ao criar gênero: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -106,6 +109,7 @@ namespace CLI
             {
                 Console.WriteLine("Erro ao buscar gênero.");
                 LogService.Write("ERROR", $"Erro ao buscar gênero: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -136,6 +140,7 @@ namespace CLI
             {
                 Console.WriteLine("Erro ao atualizar gênero.");
                 LogService.Write("ERROR", $"Erro ao atualizar gênero: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         } //OBS: O usuário não deve ter acesso a edição do ID para não ter conflito de dados duplicados, por exemplo.
 
@@ -155,6 +160,7 @@ namespace CLI
             {
                 Console.WriteLine("Erro ao deletar gênero.");
                 LogService.Write("ERROR", $"Erro ao deletar gênero: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
     }

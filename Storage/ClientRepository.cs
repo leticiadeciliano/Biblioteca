@@ -13,7 +13,7 @@ namespace Storage
             var connection = DataBase.GetConnection();
             {
                 //Metódo para inserir
-                string query = "INSERT INTO Client (ID, Name, Email, Phone, CreatedAt, UpdatedAt) VALUES (@ID, @Name, @Email, @Phone, @CreatedAt, @UpdatedAt)";
+                string query = "INSERT INTO Clients (ID, Name, Email, Phone, Created_At, Updated_At) VALUES (@ID, @Name, @Email, @Phone, @Created_At, @Updated_At)";
                 using (var command = new SQLiteCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@ID", client.ID);
@@ -21,8 +21,8 @@ namespace Storage
                     command.Parameters.AddWithValue("@Email", client.Email);
                     command.Parameters.AddWithValue("@Phone", client.Phone);
 
-                    command.Parameters.AddWithValue("@CreatedAt", client.CreatedAt);
-                    command.Parameters.AddWithValue("@UpdatedAt", client.UpdatedAt);
+                    command.Parameters.AddWithValue("@Created_At", client.Created_At);
+                    command.Parameters.AddWithValue("@Updated_At", client.Updated_At);
 
                     command.ExecuteNonQuery();
                 }
@@ -37,7 +37,7 @@ namespace Storage
             var connection = DataBase.GetConnection();
             {
                 //query
-                var command = new SQLiteCommand("SELECT * FROM Client", connection);
+                var command = new SQLiteCommand("SELECT * FROM Clients", connection);
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
@@ -50,8 +50,8 @@ namespace Storage
                             Email = Convert.ToString(reader["Email"]) ?? "",
                             Phone = Convert.ToString(reader["Phone"]) ?? "",
 
-                            CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
-                            UpdatedAt = Convert.ToDateTime(reader["UpdatedAt"])
+                            Created_At = Convert.ToDateTime(reader["Created_At"]),
+                            Updated_At = Convert.ToDateTime(reader["Updated_At"])
                         };
 
                         client.Add(clients);
@@ -68,7 +68,7 @@ namespace Storage
         {
             var connection = DataBase.GetConnection();
             {
-                var command = new SQLiteCommand("SELECT * FROM Client WHERE ID = @ID", connection);
+                var command = new SQLiteCommand("SELECT * FROM Clients WHERE ID = @ID", connection);
                 command.Parameters.AddWithValue("@ID", ID.ToString());
 
                 using (var reader = command.ExecuteReader())
@@ -83,8 +83,8 @@ namespace Storage
                             Email = Convert.ToString(reader["Email"]) ?? "",
                             Phone = Convert.ToString(reader["Phone"]) ?? "",
 
-                            CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
-                            UpdatedAt = Convert.ToDateTime(reader["UpdatedAt"])
+                            Created_At = Convert.ToDateTime(reader["Created_At"]),
+                            Updated_At = Convert.ToDateTime(reader["Updated_At"])
                         };
                     }
                 }
@@ -98,9 +98,9 @@ namespace Storage
         {
             var connection = DataBase.GetConnection();
             {
-                var query = @"UPDATE Client
+                var query = @"UPDATE Clients
                             SET Name = @Name, Email = @Email, Phone = @Phone,
-                                UpdatedAt = @UpdatedAt
+                                Updated_At = @Updated_At
                             WHERE Id = @Id";
 
 
@@ -111,8 +111,8 @@ namespace Storage
                     command.Parameters.AddWithValue("@Email", client.Email);
                     command.Parameters.AddWithValue("@Phone", client.Phone);
 
-                    command.Parameters.AddWithValue("@UpdatedAt", DateTime.Now);
-                    //como a classe é SOMENTE para atualizar, não é necessário colocar CreatedAt
+                    command.Parameters.AddWithValue("@Updated_At", DateTime.Now);
+                    //como a classe é SOMENTE para atualizar, não é necessário colocar Created_At
 
                     command.ExecuteNonQuery();
                 }
@@ -123,7 +123,7 @@ namespace Storage
         {
             var connection = DataBase.GetConnection();
             {
-                var query = "DELETE FROM Client WHERE ID = @ID";
+                var query = "DELETE FROM Clients WHERE ID = @ID";
 
                 using (var command = new SQLiteCommand(query, connection))
                 {

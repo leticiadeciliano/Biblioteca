@@ -20,6 +20,7 @@ namespace CLI
                 Console.WriteLine("5 - Deletar Idioma");
                 Console.WriteLine("0 - Voltar ao Menu Principal");
 
+                Console.Write("Escolha uma opção: ");
                 var option = Console.ReadLine();
 
                 switch (option)
@@ -56,33 +57,42 @@ namespace CLI
                 Console.WriteLine("\n=== Lista de Idiomas ===");
                 foreach (var lang in languages)
                 {
-                    Console.WriteLine($"{lang.ID} - {lang.Name} - {lang.LanguageID}");
+                    Console.WriteLine($"{lang.ID} - {lang.Name}");
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Erro ao listar idiomas.");
                 LogService.Write("ERROR", $"Erro ao listar idiomas: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
 
         static void CreateLanguage(LanguageService languageService)
         {
-            string name = PromptHelper.PromptRequired("Nome do Idioma: ");
+            try
+            {
+                string name = PromptHelper.PromptRequired("Nome do Idioma: ");
 
-            // Gera um ID incremental baseado nos existentes
-            int newID = languageService.GetAll().Any() 
-                ? languageService.GetAll().Max(l => l.ID) + 1 
-                : 1;
+                int newID = languageService.GetAll().Any()
+                    ? languageService.GetAll().Max(l => l.ID) + 1
+                    : 1;
 
-            Guid newGuid = Guid.NewGuid();
+                Guid newGuid = Guid.NewGuid();
 
-            // Chama o método existente no Service
-            languageService.Create(newID, name, newGuid);
+                // Chama o método existente no Service
+                languageService.Create(newID, name, newGuid);
 
-            Console.WriteLine("Idioma Criado com Sucesso!");
-            LogService.Write("INFO", $"Idioma criado: {name} (ID: {newID}, GUID: {newGuid})");
+                Console.WriteLine("Idioma Criado com Sucesso!");
+                LogHelper.Info($"Idioma criado: {name} (ID: {newID}, GUID: {newGuid})");
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Error($"Erro ao criar idioma: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
+            }
         }
+
 
         static void GetByIdLanguage(LanguageService languageService)
         {
@@ -100,12 +110,12 @@ namespace CLI
                 Console.WriteLine("\n=== Idioma Encontrado ===");
                 Console.WriteLine($"ID: {lang.ID}");
                 Console.WriteLine($"Nome: {lang.Name}");
-                Console.WriteLine($"LanguageID: {lang.LanguageID}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Erro ao buscar idioma.");
                 LogService.Write("ERROR", $"Erro ao buscar idioma: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -134,6 +144,7 @@ namespace CLI
             {
                 Console.WriteLine("Erro ao atualizar idioma.");
                 LogService.Write("ERROR", $"Erro ao atualizar idioma: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
 } //OBS: O usuário não deve ter acesso a edição do ID para não ter conflito de dados duplicados, por exemplo.
 
@@ -151,6 +162,7 @@ namespace CLI
             {
                 Console.WriteLine("Erro ao deletar idioma.");
                 LogService.Write("ERROR", $"Erro ao deletar idioma: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
     }

@@ -46,8 +46,8 @@ namespace Service
                 Name = name,
                 Email = email,
                 Phone = phone,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
+                Created_At = DateTime.Now,
+                Updated_At = DateTime.Now
             };
 
             _clientRepository.Add(client);
@@ -66,7 +66,7 @@ namespace Service
             existingClient.Name = name;
             existingClient.Email = email;
             existingClient.Phone = phone;
-            existingClient.UpdatedAt = DateTime.Now;
+            existingClient.Updated_At = DateTime.Now;
 
             _clientRepository.Update(existingClient);
             Console.WriteLine("Cliente atualizado com sucesso!");

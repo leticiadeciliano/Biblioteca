@@ -11,8 +11,8 @@ namespace Domain
         public required string Email { get; set; }
         public required string Phone { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public DateTime Created_At { get; set; } = DateTime.Now;
+        public DateTime Updated_At { get; set; } = DateTime.Now;
 
     }
 } 

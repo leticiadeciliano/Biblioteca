@@ -23,6 +23,7 @@ namespace CLI
                 Console.WriteLine("5 - Deletar Livro");
                 Console.WriteLine("0 - Voltar ao Menu Principal");
 
+                Console.Write("Escolha uma opção: ");
                 var option = Console.ReadLine();
 
                 switch (option)
@@ -94,7 +95,7 @@ namespace CLI
             //Publisher
             Console.WriteLine("Editoras já cadastradas: ");
             foreach (var pub in publisherService.GetAll())
-                Console.WriteLine($"{pub.ID} - {pub.Name_Publisher}");
+                Console.WriteLine($"{pub.ID} - {pub.Name}");
 
             string publisherChoice = PromptHelper.PromptRequired("Digite o ID da Editora existente ou digite 'novo' para criar");
             int publisherID;
@@ -102,11 +103,11 @@ namespace CLI
             if (publisherChoice.ToLower() == "novo")
             {
                 int ID = publisherService.GetAll().Any() ? publisherService.GetAll().Max(p => p.ID) + 1 : 1;
-                string newPublisherName = PromptHelper.PromptRequired("Nome da nova Editora: ");
+                string newPublisherName = PromptHelper.PromptRequired("Nome da Editora: ");
 
                 publisherService.Create(ID, newPublisherName);
 
-                var created = publisherService.GetAll().FirstOrDefault(p => p.Name_Publisher == newPublisherName);
+                var created = publisherService.GetAll().FirstOrDefault(p => p.Name == newPublisherName);
                 if (created == null)
                 {
                     Console.WriteLine("Erro ao criar Publisher.");
@@ -120,7 +121,7 @@ namespace CLI
             }
 
             //Genre
-            Console.WriteLine("Gêneros existentes:");
+            Console.WriteLine("Gêneros já Cadastrados:");
             foreach (var g in genreService.GetAll())
                 Console.WriteLine($"{g.ID} - {g.Name_genre}");
 
@@ -129,7 +130,7 @@ namespace CLI
 
             if (genreChoice.ToLower() == "novo")
             {
-                string newGenreName = PromptHelper.PromptRequired("Nome do novo Gênero: ");
+                string newGenreName = PromptHelper.PromptRequired("Nome do Gênero: ");
                 genreService.Create(newGenreName);
 
                 var createdGenre = genreService.GetAll().FirstOrDefault(g => g.Name_genre == newGenreName);
@@ -198,6 +199,7 @@ namespace CLI
             {
                 Console.WriteLine("Ocorreu um erro ao criar o livro.");
                 LogService.Write("ERROR", $"Erro ao criar livro: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -234,6 +236,7 @@ namespace CLI
                 {
                     Console.WriteLine("Erro ao buscar catálogo.");
                     LogService.Write("ERROR", $"Erro ao buscar catálogo: {ex.Message}");
+                    LogHelper.Error($"StackTrace: {ex.StackTrace}");
                 }
             }
 
@@ -272,6 +275,7 @@ namespace CLI
                 {
                     Console.WriteLine("Erro ao atualizar catálogo.");
                     LogService.Write("ERROR", $"Erro ao atualizar catálogo: {ex.Message}");
+                    LogHelper.Error($"StackTrace: {ex.StackTrace}");
                 }
             }
 
@@ -298,6 +302,7 @@ namespace CLI
                 {
                     Console.WriteLine("Erro ao deletar catálogo.");
                     LogService.Write("ERROR", $"Erro ao deletar catálogo: {ex.Message}");
+                    LogHelper.Error($"StackTrace: {ex.StackTrace}");
                 }
             }
         }

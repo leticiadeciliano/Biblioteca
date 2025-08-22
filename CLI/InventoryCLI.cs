@@ -20,6 +20,7 @@ namespace CLI
                 Console.WriteLine("5 - Deletar Inventário");
                 Console.WriteLine("0 - Voltar ao Menu Principal");
 
+                Console.Write("Escolha uma opção: ");
                 var option = Console.ReadLine();
 
                 switch (option)
@@ -56,13 +57,14 @@ namespace CLI
                 Console.WriteLine("\n=== Lista de Inventário ===");
                 foreach (var inv in inventories)
                 {
-                    Console.WriteLine($"{inv.ID} - Catálogo: {inv.CatalogID} - Condição: {inv.Condition} - Disponível: {inv.Is_available}");
+                    Console.WriteLine($"{inv.ID} - Catálogo: {inv.Catalog_ID} - Condição: {inv.Condition} - Disponível: {inv.Is_available}");
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Erro ao listar inventário.");
                 LogService.Write("ERROR", $"Erro ao listar inventário: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -70,9 +72,10 @@ namespace CLI
         {
             try
             {
-                Console.Write("Digite o ID do Catálogo (Guid): ");
-                var inputCatalogID = Console.ReadLine() ?? "";
-                if (!Guid.TryParse(inputCatalogID, out Guid catalogID))
+                Console.Write("Digite o ID do Inventário: ");
+                var inputID = Console.ReadLine() ?? "";
+
+                if (!int.TryParse(inputID, out int ID))
                 {
                     Console.WriteLine("ID inválido! Operação cancelada.");
                     return;
@@ -86,18 +89,27 @@ namespace CLI
                     return;
                 }
 
-                Console.Write("Está disponível? (s/n): ");
-                var isAvailable = Console.ReadLine()?.ToLower() == "s";
+                Console.Write("Digite o ID do Catalog (GUID do livro): ");
+                var inputCatalogID = Console.ReadLine() ?? "";
+                if (!Guid.TryParse(inputCatalogID, out Guid Catalog_ID))
+                {
+                    Console.WriteLine("Catalog ID inválido! Operação cancelada.");
+                    return;
+                }
 
-                inventoryService.Create(catalogID, condition, isAvailable);
+                Console.Write("Está disponível? (s/n): ");
+                var Is_available = Console.ReadLine()?.ToLower() == "s";
+
+                inventoryService.Create(ID, Catalog_ID, condition, Is_available);
 
                 Console.WriteLine("Inventário criado com sucesso!");
-                LogService.Write("INFO", $"Inventário criado: CatalogID {catalogID}, Condição {condition}, Disponível: {isAvailable}");
+                LogService.Write("INFO", $"Inventário criado: Catalog_ID {ID}, Condição {condition}, Disponível: {Is_available}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Erro ao criar inventário. Verifique os dados e tente novamente.");
                 LogService.Write("ERROR", $"Erro ao criar inventário: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -122,7 +134,7 @@ namespace CLI
 
                 Console.WriteLine("\n=== Inventário Encontrado ===");
                 Console.WriteLine($"ID: {inventory.ID}");
-                Console.WriteLine($"Catálogo: {inventory.CatalogID}");
+                Console.WriteLine($"Catálogo: {inventory.Catalog_ID}");
                 Console.WriteLine($"Condição: {inventory.Condition}");
                 Console.WriteLine($"Disponível: {inventory.Is_available}");
             }
@@ -130,6 +142,7 @@ namespace CLI
             {
                 Console.WriteLine("Erro ao buscar inventário.");
                 LogService.Write("ERROR", $"Erro ao buscar inventário: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -148,10 +161,10 @@ namespace CLI
                 }
 
                 // Atualizando campos
-                var catalogIDInput = PromptHelper.PromptRequired($"Novo CatalogID (GUID) [{inventory.CatalogID}]: ");
-                if (!Guid.TryParse(catalogIDInput, out Guid catalogID))
+                var Catalog_IDInput = PromptHelper.PromptRequired($"Novo Catalog_ID (GUID) [{inventory.Catalog_ID}]: ");
+                if (!Guid.TryParse(Catalog_IDInput, out Guid Catalog_ID))
                 {
-                    Console.WriteLine("CatalogID inválido!");
+                    Console.WriteLine("Catalog_ID inválido!");
                     return;
                 }
 
@@ -160,7 +173,7 @@ namespace CLI
                 var isAvailable = isAvailableInput.ToLower() == "s";
 
                 // Chamada correta do Update
-                inventoryService.Update(ID, catalogID, condition, isAvailable);
+                inventoryService.Update(ID, Catalog_ID, condition, isAvailable);
 
                 Console.WriteLine("Inventário atualizado com sucesso!");
                 LogService.Write("INFO", $"Inventário atualizado: {ID}");
@@ -169,6 +182,7 @@ namespace CLI
             {
                 Console.WriteLine("Erro ao atualizar inventário.");
                 LogService.Write("ERROR", $"Erro ao atualizar inventário: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -193,6 +207,7 @@ namespace CLI
             {
                 Console.WriteLine("Erro ao deletar inventário.");
                 LogService.Write("ERROR", $"Erro ao deletar inventário: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
     }

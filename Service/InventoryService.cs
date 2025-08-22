@@ -38,11 +38,11 @@ namespace Service
             return inventory;
         }
 
-        public void Create(Guid catalogID, int Condition, bool Is_available )
+        public void Create(int ID, Guid Catalog_ID, int Condition, bool Is_available )
         {
             var inventory = new Inventory
             {
-                CatalogID = catalogID,
+                Catalog_ID = Catalog_ID,
                 Condition = Condition,
                 Is_available = Is_available,
                 
@@ -54,7 +54,7 @@ namespace Service
             Console.WriteLine("Inventário adicionado com sucesso!");
         }
 
-        public void Update(int ID, Guid catalogID, int condition, bool Is_available)
+        public void Update(int ID, Guid Catalog_ID, int Condition, bool Is_available)
         {
             var existingInventory = _inventoryRepository.GetById(ID);
             if (existingInventory == null)
@@ -63,7 +63,8 @@ namespace Service
                 return;
             }
 
-            existingInventory.Condition = condition;
+            existingInventory.Catalog_ID = Catalog_ID;
+            existingInventory.Condition = Condition;
             existingInventory.Is_available = Is_available;
             
             existingInventory.Updated_At = DateTime.Now;
@@ -83,11 +84,6 @@ namespace Service
 
             _inventoryRepository.Delete(ID);
             Console.WriteLine("Inventário removido com sucesso!");
-        }
-
-        internal void Update(int iD, int condition1, string condition, string is_available)
-        {
-            throw new NotImplementedException();
         }
     }
 }

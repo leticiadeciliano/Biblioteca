@@ -1,0 +1,30 @@
+[2025-08-22 10:38:35] ERROR
+[2025-08-22 16:21:50] INFO
+[2025-08-22 16:23:42] ERROR
+[2025-08-22 16:25:38] ERROR
+[2025-08-22 16:25:54] ERROR
+[2025-08-22 16:43:11] ERROR
+[2025-08-22 16:43:11] StackTrace:    at System.Data.SQLite.SQLite3.Prepare(SQLiteConnection cnn, SQLiteCommand command, String strSql, SQLiteStatement previous, UInt32 timeoutMS, String& strRemain)
+   at System.Data.SQLite.SQLiteCommand.BuildNextCommand()
+   at System.Data.SQLite.SQLiteCommand.GetStatement(Int32 index)
+   at System.Data.SQLite.SQLiteDataReader.NextResult()
+   at System.Data.SQLite.SQLiteDataReader..ctor(SQLiteCommand cmd, CommandBehavior behave)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery()
+   at Storage.ClientRepository.Add(Client client) in /home/dev/Biblioteca/Storage/ClientRepository.cs:line 27
+   at Service.ClientService.Create(String name, String email, String phone) in /home/dev/Biblioteca/Service/ClientService.cs:line 53
+   at CLI.ClientCLI.CreateClient(ClientService clientService) in /home/dev/Biblioteca/CLI/ClientCLI.cs:line 88
+[2025-08-22 16:47:42] ERROR
+[2025-08-22 16:47:42] StackTrace:    at System.Data.SQLite.SQLite3.Prepare(SQLiteConnection cnn, SQLiteCommand command, String strSql, SQLiteStatement previous, UInt32 timeoutMS, String& strRemain)
+   at System.Data.SQLite.SQLiteCommand.BuildNextCommand()
+   at System.Data.SQLite.SQLiteCommand.GetStatement(Int32 index)
+   at System.Data.SQLite.SQLiteDataReader.NextResult()
+   at System.Data.SQLite.SQLiteDataReader..ctor(SQLiteCommand cmd, CommandBehavior behave)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery()
+   at Storage.ClientRepository.Add(Client client) in /home/dev/Biblioteca/Storage/ClientRepository.cs:line 27
+   at Service.ClientService.Create(String name, String email, String phone) in /home/dev/Biblioteca/Service/ClientService.cs:line 53
+   at CLI.ClientCLI.CreateClient(ClientService clientService) in /home/dev/Biblioteca/CLI/ClientCLI.cs:line 88
+[2025-08-22 16:57:17] INFO

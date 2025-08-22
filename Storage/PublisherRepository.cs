@@ -13,13 +13,13 @@ namespace Storage
         {
             var connection = DataBase.GetConnection();
             {
-                string query = "INSERT INTO Publisher (Name_Publisher, CreatedAt, UpdatedAt) VALUES (@Name_Publisher, @CreatedAt, @UpdatedAt)";
+                string query = "INSERT INTO Publisher (Name, Created_At, Updated_At) VALUES (@Name, @Created_At, @Updated_At)";
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Name_Publisher", publisher.Name_Publisher);
+                    command.Parameters.AddWithValue("@Name", publisher.Name);
 
-                    command.Parameters.AddWithValue("@CreatedAt", publisher.CreatedAt);
-                    command.Parameters.AddWithValue("@UpdatedAt", publisher.UpdatedAt);
+                    command.Parameters.AddWithValue("@Created_At", publisher.Created_At);
+                    command.Parameters.AddWithValue("@Updated_At", publisher.Updated_At);
 
                     command.ExecuteNonQuery();
                 }
@@ -40,9 +40,9 @@ namespace Storage
                         var publisher = new Publisher
                         {
                             ID = Convert.ToInt32(reader["ID"]),
-                            Name_Publisher = Convert.ToString(reader["Name_Publisher"]) ?? "",
-                            CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
-                            UpdatedAt = Convert.ToDateTime(reader["UpdatedAt"])
+                            Name = Convert.ToString(reader["Name"]) ?? "",
+                            Created_At = Convert.ToDateTime(reader["Created_At"]),
+                            Updated_At = Convert.ToDateTime(reader["Updated_At"])
                         };
 
                         publishers.Add(publisher);
@@ -67,10 +67,10 @@ namespace Storage
                         return new Publisher
                         {
                             ID = Convert.ToInt32(reader["ID"]),
-                            Name_Publisher = Convert.ToString(reader["Name_Publisher"]) ?? "",
+                            Name = Convert.ToString(reader["Name"]) ?? "",
 
-                            CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
-                            UpdatedAt = Convert.ToDateTime(reader["UpdatedAt"])
+                            Created_At = Convert.ToDateTime(reader["Created_At"]),
+                            Updated_At = Convert.ToDateTime(reader["Updated_At"])
                         };
                     }
                 }
@@ -84,16 +84,16 @@ namespace Storage
             var connection = DataBase.GetConnection();
             {
                 var query = @"UPDATE Publisher
-                            SET Name_Publisher = @Name_Publisher
-                            UpdatedAt = @UpdatedAt
+                            SET Name = @Name
+                            Updated_At = @Updated_At
                             WHERE ID = @ID";
 
                 using (var command = new SQLiteCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@ID", publisher.ID);
-                    command.Parameters.AddWithValue("@Name_Publisher", publisher.Name_Publisher);
+                    command.Parameters.AddWithValue("@Name", publisher.Name);
 
-                    command.Parameters.AddWithValue("@UpdatedAt", DateTime.Now);
+                    command.Parameters.AddWithValue("@Updated_At", DateTime.Now);
 
                     command.ExecuteNonQuery();
                 }

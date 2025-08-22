@@ -20,6 +20,7 @@ namespace CLI
                 Console.WriteLine("5 - Deletar Editora");
                 Console.WriteLine("0 - Voltar ao Menu Principal");
 
+                Console.Write("Escolha uma opção: ");
                 var option = Console.ReadLine();
 
                 switch (option)
@@ -56,13 +57,14 @@ namespace CLI
                 Console.WriteLine("\n=== Lista de Editoras ===");
                 foreach (var pub in publishers)
                 {
-                    Console.WriteLine($"{pub.ID} - {pub.Name_Publisher}");
+                    Console.WriteLine($"{pub.ID} - {pub.Name}");
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Erro ao listar editoras.");
                 LogService.Write("ERROR", $"Erro ao listar editoras: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -71,22 +73,23 @@ namespace CLI
             try
             {
                 var ID = PromptHelper.PromptInt("ID: ");
-                var name_Publisher = PromptHelper.PromptRequired("Name_Publisher: ");
+                var name = PromptHelper.PromptRequired("Name: ");
 
                 var newPublisher = new Publisher
                 {
                     ID = ID,
-                    Name_Publisher = name_Publisher
+                    Name = name
                 };
 
-                publisherService.Create(ID, name_Publisher);
+                publisherService.Create(ID, name);
                 Console.WriteLine("Editora criada com sucesso!");
-                LogService.Write("INFO", $"Editora criada: {ID} - {name_Publisher}");
+                LogService.Write("INFO", $"Editora criada: {ID} - {name}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Erro ao criar editora. Verifique os dados e tente novamente.");
                 LogService.Write("ERROR", $"Erro ao criar editora: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -103,12 +106,13 @@ namespace CLI
                     return;
                 }
 
-                Console.WriteLine($"ID: {pub.ID}\nNome: {pub.Name_Publisher}");
+                Console.WriteLine($"ID: {pub.ID}\nNome: {pub.Name}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Erro ao buscar editora.");
+                Console.WriteLine("Erro ao buscar Editora.");
                 LogService.Write("ERROR", $"Erro ao buscar editora: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -116,24 +120,25 @@ namespace CLI
         {
             try
             {
-                var id = PromptHelper.PromptInt("ID da Editora a atualizar");
-                var pub = publisherService.GetById(id);
+                var ID = PromptHelper.PromptInt("ID da Editora a atualizar");
+                var pub = publisherService.GetById(ID);
                 if (pub == null)
                 {
                     Console.WriteLine("Editora não encontrada.");
                     return;
                 }
 
-                var newName = PromptHelper.PromptRequired($"Novo nome ({pub.Name_Publisher}): ");
-                publisherService.Update(id, newName);
+                var newName = PromptHelper.PromptRequired($"Novo Nome ({pub.Name}): ");
+                publisherService.Update(ID, newName);
 
                 Console.WriteLine("Editora atualizada com sucesso!");
-                LogService.Write("INFO", $"Editora atualizada: {id}");
+                LogService.Write("INFO", $"Editora atualizada: {ID}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Erro ao atualizar editora.");
+                Console.WriteLine("Erro ao atualizar Editora.");
                 LogService.Write("ERROR", $"Erro ao atualizar editora: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -150,6 +155,7 @@ namespace CLI
             {
                 Console.WriteLine("Erro ao deletar editora.");
                 LogService.Write("ERROR", $"Erro ao deletar editora: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
     }

@@ -9,13 +9,12 @@ namespace Storage
         public void Add(Language language)
         {
             var connection = DataBase.GetConnection();
-            string query = "INSERT INTO Language (Name, LanguageID, CreatedAt, UpdatedAt) VALUES (@Name, @LanguageID, @CreatedAt, @UpdatedAt)";
+            string query = "INSERT INTO Language (Name, Created_At, Updated_At) VALUES (@Name, @Created_At, @Updated_At)";
             using (var command = new SQLiteCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@Name", language.Name);
-                command.Parameters.AddWithValue("@LanguageID", language.LanguageID);
-                command.Parameters.AddWithValue("@CreatedAt", language.CreatedAt);
-                command.Parameters.AddWithValue("@UpdatedAt", language.UpdatedAt);
+                command.Parameters.AddWithValue("@Created_At", language.Created_At);
+                command.Parameters.AddWithValue("@Updated_At", language.Updated_At);
                 command.ExecuteNonQuery();
             }
         }
@@ -34,9 +33,8 @@ namespace Storage
                     {
                         ID = Convert.ToInt32(reader["ID"]),
                         Name = Convert.ToString(reader["Name"]) ?? "",
-                        LanguageID = Guid.Parse(reader["LanguageID"].ToString() ?? Guid.Empty.ToString()),
-                        CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
-                        UpdatedAt = Convert.ToDateTime(reader["UpdatedAt"])
+                        Created_At = Convert.ToDateTime(reader["Created_At"]),
+                        Updated_At = Convert.ToDateTime(reader["Updated_At"])
                     };
                 }
             }
@@ -58,9 +56,8 @@ namespace Storage
                     {
                         ID = Convert.ToInt32(reader["ID"]),
                         Name = reader["Name"].ToString() ?? "",
-                        LanguageID = Guid.Parse(reader["LanguageID"].ToString() ?? Guid.Empty.ToString()),
-                        CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
-                        UpdatedAt = Convert.ToDateTime(reader["UpdatedAt"])
+                        Created_At = Convert.ToDateTime(reader["Created_At"]),
+                        Updated_At = Convert.ToDateTime(reader["Updated_At"])
                     });
                 }
             }
@@ -72,15 +69,14 @@ namespace Storage
         {
             var connection = DataBase.GetConnection();
             string query = @"UPDATE Language 
-                             SET Name = @Name, LanguageID = @LanguageID, UpdatedAt = @UpdatedAt
+                             SET Name = @Name, Updated_At = @Updated_At
                              WHERE ID = @ID";
 
             using (var command = new SQLiteCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@ID", language.ID);
                 command.Parameters.AddWithValue("@Name", language.Name);
-                command.Parameters.AddWithValue("@LanguageID", language.LanguageID);
-                command.Parameters.AddWithValue("@UpdatedAt", DateTime.Now);
+                command.Parameters.AddWithValue("@Updated_At", DateTime.Now);
                 command.ExecuteNonQuery();
             }
         }
