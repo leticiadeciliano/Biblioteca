@@ -6,16 +6,34 @@ namespace Service
     public class InventoryService
     {
         private readonly InventoryRepository _inventoryRepository;
+        private readonly CatalogRepository catalogRepository;
 
         public InventoryService()
         {
             _inventoryRepository = new InventoryRepository();
+            catalogRepository = new CatalogRepository();
         }
 
-        public List<Inventory> GetAll()
+        //Básico para retornar somente a Lista
+        // public List<Inventory> GetAll()
+        // {
+        //     // Evita InvalidCastException se o repo retornar IEnumerable
+        //     return _inventoryRepository.GetAll().ToList();
+        // }
+        
+        // Função para listar Inventory puro
+        public List<(int ID, string Title, Guid Catalog_ID)> ListInventoriesWithCatalog()
         {
-            // Evita InvalidCastException se o repo retornar IEnumerable
-            return _inventoryRepository.GetAll().ToList();
+            var inventories = _inventoryRepository.GetAll().ToList();
+            var result = new List<(int, string, Guid)>();
+
+            foreach (var inv in inventories)
+            {
+                var catalog = catalogRepository.GetById(inv.Catalog_ID);
+                result.Add((inv.ID, catalog?.Title ?? "Desconhecido", inv.Catalog_ID));
+            }
+
+            return result;
         }
 
         public void Create(Guid Catalog_ID, int Condition)
@@ -24,7 +42,7 @@ namespace Service
             {
                 Catalog_ID = Catalog_ID,
                 Condition = Condition,
-                
+
                 Created_At = DateTime.Now,
                 Updated_At = DateTime.Now
             };
@@ -52,19 +70,9 @@ namespace Service
             Console.WriteLine("Inventário atualizado com sucesso!");
         }
 
-        public void Delete(int ID)
+        public void DeleteAllByCatalog_ID(Guid catalog_ID)
         {
-            var inventories = _inventoryRepository.GetAll();
-            var existingInventory = inventories.FirstOrDefault(i => i.ID == ID);
-
-            if (existingInventory == null)
-            {
-                Console.WriteLine("Inventário não encontrado.");
-                return;
-            }
-
-            _inventoryRepository.Delete(ID);
-            Console.WriteLine("Inventário removido com sucesso!");
+            _inventoryRepository.Delete(catalog_ID);
         }
 
     }

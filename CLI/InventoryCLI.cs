@@ -27,7 +27,7 @@ namespace CLI
                 switch (option)
                 {
                     case "1":
-                        ListInventory(inventoryService, catalogService);
+                        ListInventory(inventoryService);
                         break;
                     case "2":
                         CreateInventory(inventoryService, catalogService);
@@ -47,40 +47,27 @@ namespace CLI
             }
         }
 
-        static void ListInventory(InventoryService inventoryService, CatalogService catalogService)
+        static void ListInventory(InventoryService inventoryService)
         {
-            try
+            var inventories = inventoryService.ListInventoriesWithCatalog();
+
+            if (!inventories.Any())
             {
-                var inventories = inventoryService.GetAll();
-                if (inventories.Count == 0)
-                {
-                    Console.WriteLine("Nenhum inventário cadastrado.");
-                    return;
-                }
-
-                Console.WriteLine("\n=== Inventário da Biblioteca ===");
-
-                // Agrupa por Catalog_ID
-                var grouped = inventories
-                    .GroupBy(inv => inv.Catalog_ID)
-                    .ToList();
-
-                foreach (var group in grouped)
-                {
-                    var catalog = catalogService.GetById(group.Key); // resgata informações de catalog
-                    int total = group.Count();
-
-                    Console.WriteLine($"Livro: {catalog?.Title ?? "Desconhecido"} (Catalog_ID: {group.Key})");
-                    Console.WriteLine($"   Exemplares: {total}");
-                }
+                Console.WriteLine("Nenhum inventário cadastrado.");
+                return;
             }
-            catch (Exception ex)
+
+            Console.WriteLine("\n=== Inventário da Biblioteca ===");
+            var grouped = inventories.GroupBy(inv => inv.Catalog_ID);
+
+            foreach (var group in grouped)
             {
-                Console.WriteLine("Erro ao listar inventário.");
-                LogService.Write("ERROR", $"Erro ao listar inventário: {ex.Message}");
-                LogHelper.Error($"StackTrace: {ex.StackTrace}");
+                var title = group.First().Title;
+                Console.WriteLine($"Livro: {title} (Catalog_ID: {group.Key})");
+                Console.WriteLine($"   Exemplares: {group.Count()}");
             }
         }
+
 
 
         static void CreateInventory(InventoryService inventoryService, CatalogService catalogService)
@@ -176,26 +163,44 @@ namespace CLI
 
         static void DeleteInventory(InventoryService inventoryService)
         {
-            try
+            var inventories = inventoryService.ListInventoriesWithCatalog();
+            if (!inventories.Any())
             {
-                var idInput = PromptHelper.PromptRequired("ID do Inventário a deletar");
-                if (!int.TryParse(idInput, out int inventoryID))
-                {
-                    Console.WriteLine("ID inválido!");
-                    return;
-                }
-
-                inventoryService.Delete(inventoryID);
-
-                Console.WriteLine("Inventário deletado com sucesso!");
-                LogService.Write("INFO", $"Inventário deletado: {inventoryID}");
+                Console.WriteLine("Nenhum inventário encontrado.");
+                return;
             }
-            catch (Exception ex)
+
+            var grouped = inventories
+                .GroupBy(inv => inv.Catalog_ID)
+                .Select(g => new { Catalog_ID = g.Key, Title = g.First().Title, Count = g.Count() })
+                .ToList();
+
+            Console.WriteLine("\nSelecione o inventário que deseja deletar:");
+            for (int i = 0; i < grouped.Count; i++)
             {
-                Console.WriteLine("Erro ao deletar inventário.");
-                LogService.Write("ERROR", $"Erro ao deletar inventário: {ex.Message}");
-                LogHelper.Error($"StackTrace: {ex.StackTrace}");
+                var g = grouped[i];
+                Console.WriteLine($"{i + 1} - {g.Title} | Exemplares: {g.Count}");
             }
+
+            var option = PromptHelper.PromptInt("Digite o número da opção");
+
+            if (option < 1 || option > grouped.Count)
+            {
+                Console.WriteLine("Opção inválida! Operação cancelada.");
+                return;
+            }
+
+            var selected = grouped[option - 1];
+
+            var confirm = PromptHelper.PromptRequired($"Tem certeza que deseja deletar TODOS os exemplares de '{selected.Title}'? (s/n)");
+            if (confirm.ToLower() != "s")
+            {
+                Console.WriteLine("Operação cancelada.");
+                return;
+            }
+
+            inventoryService.DeleteAllByCatalog_ID(selected.Catalog_ID);
+            Console.WriteLine($"Todos os exemplares de '{selected.Title}' foram removidos com sucesso!");
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Storage
                 }
             }
         }
-
+        
         public IEnumerable<Inventory> GetAll()
         {
             var inventory = new List<Inventory>();
@@ -64,8 +64,6 @@ namespace Storage
             return inventory;
         }
 
-
-        
         public void Update(Inventory inventory)
         {
             var connection = DataBase.GetConnection();
@@ -87,17 +85,14 @@ namespace Storage
             }
         }
 
-        public void Delete(int ID)
+        public void Delete(Guid catalog_ID)
         {
             var connection = DataBase.GetConnection();
-            {
-                var query = "DELETE FROM Inventory WHERE ID = @ID";
-                using (var command = new SQLiteCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@ID", ID);
-                    command.ExecuteNonQuery();
-                }
-            }
+            string query = "DELETE FROM Inventory WHERE Catalog_ID = @Catalog_ID";
+            using var command = new SQLiteCommand(query, connection);
+            command.Parameters.AddWithValue("@Catalog_ID", catalog_ID.ToString());
+            command.ExecuteNonQuery();
         }
+
     }
 }

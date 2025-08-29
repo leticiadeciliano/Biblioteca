@@ -75,7 +75,6 @@ namespace Storage
                         return new Loan
                         {
                             ID = Guid.Parse(reader["ID"].ToString() ?? Guid.Empty.ToString()),
-                            // convertendo ID do banco de TEXT para tipo string e verificando se está NULL
                             Days_to_expire = Convert.ToInt32(reader["days_to_expire"]),
                             ClientID = Guid.Parse(reader["ClientID"].ToString() ?? Guid.Empty.ToString()),
                             InventoryID = Guid.Parse(reader["InventoryID"].ToString() ?? Guid.Empty.ToString()),

@@ -6,6 +6,6 @@ namespace Biblioteca.Domain.Interfaces
         void Add(Inventory inventory);
         IEnumerable<Inventory> GetAll();
         void Update(Inventory inventory);
-        void Delete(int ID);
+        void Delete(Guid Catalog_ID);
     }
 }
