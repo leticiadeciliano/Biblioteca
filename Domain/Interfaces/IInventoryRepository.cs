@@ -4,7 +4,6 @@ namespace Biblioteca.Domain.Interfaces
     public interface IInventoryRepository
     {
         void Add(Inventory inventory);
-        Inventory GetById(int ID);
         IEnumerable<Inventory> GetAll();
         void Update(Inventory inventory);
         void Delete(int ID);

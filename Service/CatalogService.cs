@@ -46,7 +46,7 @@ namespace Service
 
         //Created_At e Updated_At não entram como parâmetro por não ser necessário o Usuário 
         // definir a criação e atualização dos dados
-        public void Create(Guid guid, string title, string author, int number_pages, int year, string description, int publisher_ID, string language_ID)
+        public void Create(Guid guid, string title, string author, int number_pages, int year, string description, int publisher_ID, int language_ID)
         {
             var catalog = new Catalog
             {

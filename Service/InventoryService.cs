@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Domain;
 using Storage;
 
@@ -16,35 +14,16 @@ namespace Service
 
         public List<Inventory> GetAll()
         {
-            return (List<Inventory>)_inventoryRepository.GetAll();
+            // Evita InvalidCastException se o repo retornar IEnumerable
+            return _inventoryRepository.GetAll().ToList();
         }
 
-        public Inventory? GetById(int ID)
-        {
-            if (ID < 0)
-            {
-                Console.WriteLine("ID inválido.");
-                return null;
-            }
-
-            var inventory = _inventoryRepository.GetById(ID);
-
-            if (inventory == null)
-            {
-                Console.WriteLine("Inventário não encontrado.");
-                return null;
-            }
-
-            return inventory;
-        }
-
-        public void Create(int ID, Guid Catalog_ID, int Condition, bool Is_available )
+        public void Create(Guid Catalog_ID, int Condition)
         {
             var inventory = new Inventory
             {
                 Catalog_ID = Catalog_ID,
                 Condition = Condition,
-                Is_available = Is_available,
                 
                 Created_At = DateTime.Now,
                 Updated_At = DateTime.Now
@@ -54,9 +33,11 @@ namespace Service
             Console.WriteLine("Inventário adicionado com sucesso!");
         }
 
-        public void Update(int ID, Guid Catalog_ID, int Condition, bool Is_available)
+        public void Update(int ID, Guid Catalog_ID, int Condition)
         {
-            var existingInventory = _inventoryRepository.GetById(ID);
+            var inventories = _inventoryRepository.GetAll();
+            var existingInventory = inventories.FirstOrDefault(i => i.ID == ID);
+
             if (existingInventory == null)
             {
                 Console.WriteLine("Inventário não encontrado.");
@@ -65,8 +46,6 @@ namespace Service
 
             existingInventory.Catalog_ID = Catalog_ID;
             existingInventory.Condition = Condition;
-            existingInventory.Is_available = Is_available;
-            
             existingInventory.Updated_At = DateTime.Now;
 
             _inventoryRepository.Update(existingInventory);
@@ -75,7 +54,9 @@ namespace Service
 
         public void Delete(int ID)
         {
-            var existingInventory = _inventoryRepository.GetById(ID);
+            var inventories = _inventoryRepository.GetAll();
+            var existingInventory = inventories.FirstOrDefault(i => i.ID == ID);
+
             if (existingInventory == null)
             {
                 Console.WriteLine("Inventário não encontrado.");
@@ -85,5 +66,6 @@ namespace Service
             _inventoryRepository.Delete(ID);
             Console.WriteLine("Inventário removido com sucesso!");
         }
+
     }
 }

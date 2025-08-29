@@ -63,6 +63,7 @@ namespace Service
                 return;
             }
 
+            existingClient.ID = Guid.NewGuid();
             existingClient.Name = name;
             existingClient.Email = email;
             existingClient.Phone = phone;

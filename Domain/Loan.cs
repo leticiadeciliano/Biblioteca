@@ -1,5 +1,3 @@
-using System;
-
 public class Loan
 {
     public required Guid ID { get; set; } = Guid.NewGuid();

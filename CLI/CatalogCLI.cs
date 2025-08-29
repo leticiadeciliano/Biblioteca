@@ -1,6 +1,7 @@
 using Service;
 using Domain;
 using CLI.Helpers;
+using System.Data.Common;
 
 namespace CLI
 {
@@ -63,7 +64,7 @@ namespace CLI
             try
             {
                 var catalogs = catalogService.GetAll();
-                Console.WriteLine("\n=== Lista de Catálogos ===");
+                Console.WriteLine("\n=== Lista de Livros ===");
                 foreach (var catalog in catalogs)
                 {
                     Console.WriteLine($"{catalog.ID} - {catalog.Title} - {catalog.Author} - {catalog.Number_pages} - {catalog.Year} - {catalog.Description} - {catalog.Publisher_ID} - {catalog.Language_ID}");
@@ -71,8 +72,9 @@ namespace CLI
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Erro ao listar catálogos.");
-                LogService.Write("ERROR", $"Erro ao listar catálogos: {ex.Message}");
+                Console.WriteLine("Erro ao listar catálogo.");
+                LogService.Write("ERROR", $"Erro ao listar catálogo: {ex.Message}");
+                LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -189,7 +191,7 @@ namespace CLI
                     year,
                     description,
                     publisherID,
-                    languageID.ToString()
+                    languageID
                 );
 
                 Console.WriteLine("Livro criado com sucesso!");

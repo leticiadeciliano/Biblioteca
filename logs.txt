@@ -1,10 +1,38 @@
-[2025-08-22 10:38:35] ERROR
-[2025-08-22 16:21:50] INFO
-[2025-08-22 16:23:42] ERROR
-[2025-08-22 16:25:38] ERROR
-[2025-08-22 16:25:54] ERROR
-[2025-08-22 16:43:11] ERROR
-[2025-08-22 16:43:11] StackTrace:    at System.Data.SQLite.SQLite3.Prepare(SQLiteConnection cnn, SQLiteCommand command, String strSql, SQLiteStatement previous, UInt32 timeoutMS, String& strRemain)
+[2025-08-28 11:41:42] ERROR
+[2025-08-28 11:41:42] StackTrace:    at System.Data.SQLite.SQLite3.Step(SQLiteStatement stmt)
+   at System.Data.SQLite.SQLiteDataReader.Step(SQLiteStatement statement)
+   at System.Data.SQLite.SQLiteDataReader.NextResult()
+   at System.Data.SQLite.SQLiteDataReader..ctor(SQLiteCommand cmd, CommandBehavior behave)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery()
+   at Storage.CatalogRepository.Add(Catalog catalog) in /home/dev/Biblioteca/Storage/CatalogRepository.cs:line 35
+   at Service.CatalogService.Create(Guid guid, String title, String author, Int32 number_pages, Int32 year, String description, Int32 publisher_ID, String language_ID) in /home/dev/Biblioteca/Service/CatalogService.cs:line 66
+   at CLI.CatalogCLI.CreateCatalog(CatalogService catalogService, PublisherService publisherService, GenreService genreService, LanguageService languageService) in /home/dev/Biblioteca/CLI/CatalogCLI.cs:line 186
+[2025-08-28 11:48:29] ERROR
+[2025-08-28 11:48:29] StackTrace:    at System.Data.SQLite.SQLite3.Step(SQLiteStatement stmt)
+   at System.Data.SQLite.SQLiteDataReader.Step(SQLiteStatement statement)
+   at System.Data.SQLite.SQLiteDataReader.NextResult()
+   at System.Data.SQLite.SQLiteDataReader..ctor(SQLiteCommand cmd, CommandBehavior behave)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery()
+   at Storage.CatalogRepository.Add(Catalog catalog) in /home/dev/Biblioteca/Storage/CatalogRepository.cs:line 35
+   at Service.CatalogService.Create(Guid guid, String title, String author, Int32 number_pages, Int32 year, String description, Int32 publisher_ID, String language_ID) in /home/dev/Biblioteca/Service/CatalogService.cs:line 66
+   at CLI.CatalogCLI.CreateCatalog(CatalogService catalogService, PublisherService publisherService, GenreService genreService, LanguageService languageService) in /home/dev/Biblioteca/CLI/CatalogCLI.cs:line 186
+[2025-08-28 11:51:45] ERROR
+[2025-08-28 11:51:45] StackTrace:    at System.Data.SQLite.SQLite3.Step(SQLiteStatement stmt)
+   at System.Data.SQLite.SQLiteDataReader.Step(SQLiteStatement statement)
+   at System.Data.SQLite.SQLiteDataReader.NextResult()
+   at System.Data.SQLite.SQLiteDataReader..ctor(SQLiteCommand cmd, CommandBehavior behave)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery()
+   at Storage.CatalogRepository.Add(Catalog catalog) in /home/dev/Biblioteca/Storage/CatalogRepository.cs:line 35
+   at Service.CatalogService.Create(Guid guid, String title, String author, Int32 number_pages, Int32 year, String description, Int32 publisher_ID, String language_ID) in /home/dev/Biblioteca/Service/CatalogService.cs:line 66
+   at CLI.CatalogCLI.CreateCatalog(CatalogService catalogService, PublisherService publisherService, GenreService genreService, LanguageService languageService) in /home/dev/Biblioteca/CLI/CatalogCLI.cs:line 186
+[2025-08-28 14:42:25] ERROR
+[2025-08-28 14:42:25] StackTrace:    at System.Data.SQLite.SQLite3.Prepare(SQLiteConnection cnn, SQLiteCommand command, String strSql, SQLiteStatement previous, UInt32 timeoutMS, String& strRemain)
    at System.Data.SQLite.SQLiteCommand.BuildNextCommand()
    at System.Data.SQLite.SQLiteCommand.GetStatement(Int32 index)
    at System.Data.SQLite.SQLiteDataReader.NextResult()
@@ -12,19 +40,98 @@
    at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
    at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery(CommandBehavior behavior)
    at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery()
-   at Storage.ClientRepository.Add(Client client) in /home/dev/Biblioteca/Storage/ClientRepository.cs:line 27
-   at Service.ClientService.Create(String name, String email, String phone) in /home/dev/Biblioteca/Service/ClientService.cs:line 53
-   at CLI.ClientCLI.CreateClient(ClientService clientService) in /home/dev/Biblioteca/CLI/ClientCLI.cs:line 88
-[2025-08-22 16:47:42] ERROR
-[2025-08-22 16:47:42] StackTrace:    at System.Data.SQLite.SQLite3.Prepare(SQLiteConnection cnn, SQLiteCommand command, String strSql, SQLiteStatement previous, UInt32 timeoutMS, String& strRemain)
+   at Storage.CatalogRepository.Add(Catalog catalog) in /home/dev/Biblioteca/Storage/CatalogRepository.cs:line 35
+   at Service.CatalogService.Create(Guid guid, String title, String author, Int32 number_pages, Int32 year, String description, Int32 publisher_ID, Int32 language_ID) in /home/dev/Biblioteca/Service/CatalogService.cs:line 66
+   at CLI.CatalogCLI.CreateCatalog(CatalogService catalogService, PublisherService publisherService, GenreService genreService, LanguageService languageService) in /home/dev/Biblioteca/CLI/CatalogCLI.cs:line 186
+[2025-08-28 14:43:57] ERROR
+[2025-08-28 14:43:57] StackTrace:    at System.Data.SQLite.SQLite3.Prepare(SQLiteConnection cnn, SQLiteCommand command, String strSql, SQLiteStatement previous, UInt32 timeoutMS, String& strRemain)
    at System.Data.SQLite.SQLiteCommand.BuildNextCommand()
    at System.Data.SQLite.SQLiteCommand.GetStatement(Int32 index)
    at System.Data.SQLite.SQLiteDataReader.NextResult()
    at System.Data.SQLite.SQLiteDataReader..ctor(SQLiteCommand cmd, CommandBehavior behave)
    at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader()
+   at Storage.CatalogRepository.GetAll() in /home/dev/Biblioteca/Storage/CatalogRepository.cs:line 52
+   at Service.CatalogService.GetAll() in /home/dev/Biblioteca/Service/CatalogService.cs:line 24
+   at CLI.CatalogCLI.ListCatalog(CatalogService catalogService) in /home/dev/Biblioteca/CLI/CatalogCLI.cs:line 66
+[2025-08-28 14:51:09] ERROR
+[2025-08-28 14:51:09] StackTrace:    at System.Data.SQLite.SQLite3.Prepare(SQLiteConnection cnn, SQLiteCommand command, String strSql, SQLiteStatement previous, UInt32 timeoutMS, String& strRemain)
+   at System.Data.SQLite.SQLiteCommand.BuildNextCommand()
+   at System.Data.SQLite.SQLiteCommand.GetStatement(Int32 index)
+   at System.Data.SQLite.SQLiteDataReader.NextResult()
+   at System.Data.SQLite.SQLiteDataReader..ctor(SQLiteCommand cmd, CommandBehavior behave)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader()
+   at Storage.CatalogRepository.GetAll() in /home/dev/Biblioteca/Storage/CatalogRepository.cs:line 52
+   at Service.CatalogService.GetAll() in /home/dev/Biblioteca/Service/CatalogService.cs:line 24
+   at CLI.CatalogCLI.ListCatalog(CatalogService catalogService) in /home/dev/Biblioteca/CLI/CatalogCLI.cs:line 66
+[2025-08-28 14:58:55] ERROR
+[2025-08-28 14:58:55] StackTrace:    at System.Data.SQLite.SQLite3.Prepare(SQLiteConnection cnn, SQLiteCommand command, String strSql, SQLiteStatement previous, UInt32 timeoutMS, String& strRemain)
+   at System.Data.SQLite.SQLiteCommand.BuildNextCommand()
+   at System.Data.SQLite.SQLiteCommand.GetStatement(Int32 index)
+   at System.Data.SQLite.SQLiteDataReader.NextResult()
+   at System.Data.SQLite.SQLiteDataReader..ctor(SQLiteCommand cmd, CommandBehavior behave)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader()
+   at Storage.CatalogRepository.GetAll() in /home/dev/Biblioteca/Storage/CatalogRepository.cs:line 52
+   at Service.CatalogService.GetAll() in /home/dev/Biblioteca/Service/CatalogService.cs:line 24
+   at CLI.CatalogCLI.ListCatalog(CatalogService catalogService) in /home/dev/Biblioteca/CLI/CatalogCLI.cs:line 66
+[2025-08-28 15:00:18] ERROR
+[2025-08-28 15:00:18] StackTrace:    at System.Data.SQLite.SQLiteCommand.InitializeForReader()
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader()
+   at Storage.CatalogRepository.GetAll() in /home/dev/Biblioteca/Storage/CatalogRepository.cs:line 51
+   at Service.CatalogService.GetAll() in /home/dev/Biblioteca/Service/CatalogService.cs:line 24
+   at CLI.CatalogCLI.ListCatalog(CatalogService catalogService) in /home/dev/Biblioteca/CLI/CatalogCLI.cs:line 66
+[2025-08-28 15:02:36] ERROR
+[2025-08-28 15:02:36] StackTrace:    at System.Data.SQLite.SQLiteCommand.InitializeForReader()
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader()
+   at Storage.CatalogRepository.GetAll() in /home/dev/Biblioteca/Storage/CatalogRepository.cs:line 51
+   at Service.CatalogService.GetAll() in /home/dev/Biblioteca/Service/CatalogService.cs:line 24
+   at CLI.CatalogCLI.ListCatalog(CatalogService catalogService) in /home/dev/Biblioteca/CLI/CatalogCLI.cs:line 66
+[2025-08-28 15:03:29] ERROR
+[2025-08-28 15:03:29] StackTrace:    at System.Data.SQLite.SQLiteCommand.InitializeForReader()
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader()
+   at Storage.CatalogRepository.GetAll() in /home/dev/Biblioteca/Storage/CatalogRepository.cs:line 52
+   at Service.CatalogService.GetAll() in /home/dev/Biblioteca/Service/CatalogService.cs:line 24
+   at CLI.CatalogCLI.ListCatalog(CatalogService catalogService) in /home/dev/Biblioteca/CLI/CatalogCLI.cs:line 66
+[2025-08-28 15:13:13] ERROR
+[2025-08-28 15:13:13] StackTrace:    at System.Data.SQLite.SQLiteCommand.InitializeForReader()
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader()
+   at Storage.CatalogRepository.GetAll() in /home/dev/Biblioteca/Storage/CatalogRepository.cs:line 52
+   at Service.CatalogService.GetAll() in /home/dev/Biblioteca/Service/CatalogService.cs:line 24
+   at CLI.CatalogCLI.ListCatalog(CatalogService catalogService) in /home/dev/Biblioteca/CLI/CatalogCLI.cs:line 66
+[2025-08-28 15:14:00] ERROR
+[2025-08-28 15:14:00] StackTrace:    at System.Data.SQLite.SQLiteCommand.InitializeForReader()
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader()
+   at Storage.CatalogRepository.GetAll() in /home/dev/Biblioteca/Storage/CatalogRepository.cs:line 52
+   at Service.CatalogService.GetAll() in /home/dev/Biblioteca/Service/CatalogService.cs:line 24
+   at CLI.CatalogCLI.ListCatalog(CatalogService catalogService) in /home/dev/Biblioteca/CLI/CatalogCLI.cs:line 66
+[2025-08-28 15:42:01] ERROR
+[2025-08-28 15:42:01] StackTrace:    at System.Data.SQLite.SQLite3.Step(SQLiteStatement stmt)
+   at System.Data.SQLite.SQLiteDataReader.Step(SQLiteStatement statement)
+   at System.Data.SQLite.SQLiteDataReader.NextResult()
+   at System.Data.SQLite.SQLiteDataReader..ctor(SQLiteCommand cmd, CommandBehavior behave)
+   at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
    at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery(CommandBehavior behavior)
    at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery()
-   at Storage.ClientRepository.Add(Client client) in /home/dev/Biblioteca/Storage/ClientRepository.cs:line 27
-   at Service.ClientService.Create(String name, String email, String phone) in /home/dev/Biblioteca/Service/ClientService.cs:line 53
-   at CLI.ClientCLI.CreateClient(ClientService clientService) in /home/dev/Biblioteca/CLI/ClientCLI.cs:line 88
-[2025-08-22 16:57:17] INFO
+   at Storage.CatalogRepository.Add(Catalog catalog) in /home/dev/Biblioteca/Storage/CatalogRepository.cs:line 35
+   at Service.CatalogService.Create(Guid guid, String title, String author, Int32 number_pages, Int32 year, String description, Int32 publisher_ID, Int32 language_ID) in /home/dev/Biblioteca/Service/CatalogService.cs:line 66
+   at CLI.CatalogCLI.CreateCatalog(CatalogService catalogService, PublisherService publisherService, GenreService genreService, LanguageService languageService) in /home/dev/Biblioteca/CLI/CatalogCLI.cs:line 186
+[2025-08-28 15:52:43] INFO
+[2025-08-28 15:57:29] INFO
+[2025-08-28 16:56:20] INFO
+[2025-08-28 16:57:02] INFO
+[2025-08-28 17:24:01] INFO
+[2025-08-28 20:36:03] INFO
+[2025-08-28 20:51:02] ERROR
+[2025-08-28 20:51:02] StackTrace:    at System.Data.SQLite.SQLiteConnection.Open()
+   at Storage.CatalogRepository.Add(Catalog catalog) in /home/dev/Biblioteca/Storage/CatalogRepository.cs:line 18
+   at Service.CatalogService.Create(Guid guid, String title, String author, Int32 number_pages, Int32 year, String description, Int32 publisher_ID, Int32 language_ID) in /home/dev/Biblioteca/Service/CatalogService.cs:line 66
+   at CLI.CatalogCLI.CreateCatalog(CatalogService catalogService, PublisherService publisherService, GenreService genreService, LanguageService languageService) in /home/dev/Biblioteca/CLI/CatalogCLI.cs:line 186
+[2025-08-28 20:52:53] INFO
+[2025-08-28 21:01:56] INFO

@@ -1,5 +1,4 @@
-using System;
-using CLI; // Importa os menus das entidades
+using CLI;
 
 class Program
 {

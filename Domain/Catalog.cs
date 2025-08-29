@@ -1,6 +1,3 @@
-using System;
-
-
 namespace Domain
 {
     public class Catalog
@@ -12,7 +9,7 @@ namespace Domain
         public required int Year { get; set; }
         public required string Description { get; set; }
         public required int Publisher_ID { get; set; }
-        public required string Language_ID { get; set; }
+        public required int Language_ID { get; set; }
 
         public DateTime Created_At { get; set; } = DateTime.Now;
         public DateTime Updated_At { get; set; } = DateTime.Now;

@@ -16,7 +16,7 @@ namespace Storage
                 string query = "INSERT INTO Loan (ID, days_to_expire, ClientID, InventoryID, ReturnAt, CreatedAt, UpdatedAt) VALUES (@ID, @days_to_expire, @ClientID, @InventoryID, @ReturnAt, @CreatedAt, @UpdatedAt)";
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@ID", loan.ID);
+                    command.Parameters.AddWithValue("@ID", loan.ID.ToString());
                     command.Parameters.AddWithValue("@days_to_expire", loan.Days_to_expire);
                     command.Parameters.AddWithValue("@CLientID", loan.ClientID);
                     command.Parameters.AddWithValue("@InventoryID", loan.InventoryID);
