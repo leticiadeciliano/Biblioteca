@@ -12,49 +12,97 @@ namespace Storage
         public void Add(Loan loan)
         {
             var connection = DataBase.GetConnection();
+
+            string query = "INSERT INTO Loan (ID, Days_to_expire, Client_ID, Inventory_ID, Return_At, Created_At, Updated_At) VALUES (@ID, @Days_to_expire, @Client_ID, @Inventory_ID, @Return_At, @Created_At, @Updated_At)";
+            using (var command = new SQLiteCommand(query, connection))
             {
-                string query = "INSERT INTO Loan (ID, days_to_expire, ClientID, InventoryID, ReturnAt, CreatedAt, UpdatedAt) VALUES (@ID, @days_to_expire, @ClientID, @InventoryID, @ReturnAt, @CreatedAt, @UpdatedAt)";
-                using (var command = new SQLiteCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@ID", loan.ID.ToString());
-                    command.Parameters.AddWithValue("@days_to_expire", loan.Days_to_expire);
-                    command.Parameters.AddWithValue("@CLientID", loan.ClientID);
-                    command.Parameters.AddWithValue("@InventoryID", loan.InventoryID);
+                command.Parameters.AddWithValue("@ID", loan.ToString());
+                command.Parameters.AddWithValue("@Days_to_expire", loan.Days_to_expire);
+                command.Parameters.AddWithValue("@Client_ID", loan.Client_ID);
+                command.Parameters.AddWithValue("@Inventory_ID", loan.Inventory_ID.ToString());
+                command.Parameters.AddWithValue("@Return_At", loan.Return_At);
+                command.Parameters.AddWithValue("@Created_At", loan.Created_At);
+                command.Parameters.AddWithValue("@Updated_At", loan.Updated_At);
 
-                    command.Parameters.AddWithValue("@CreatedAt", loan.CreatedAt);
-                    command.Parameters.AddWithValue("@UpdatedAt", loan.UpdatedAt);
-                    command.Parameters.AddWithValue("@ReturnAt", loan.ReturnAt);
+                command.ExecuteNonQuery();
 
-                    command.ExecuteNonQuery();
-                }
             }
         }
 
         public IEnumerable<Loan> GetAll()
         {
             var loans = new List<Loan>();
-
             var connection = DataBase.GetConnection();
+
+            if (connection.State != System.Data.ConnectionState.Open)
+                connection.Open();
+
+            using (var command = new SQLiteCommand(
+                "SELECT ID, Client_ID, Inventory_ID, Days_to_expire, Created_At, Updated_At, Return_At FROM Loan", connection))
+            using (var reader = command.ExecuteReader())
             {
-                var command = new SQLiteCommand("SELECT * FROM Loan", connection);
-                using (var reader = command.ExecuteReader())
+                int ordId = reader.GetOrdinal("ID");
+                int ordClientId = reader.GetOrdinal("Client_ID");
+                int ordInventoryId = reader.GetOrdinal("Inventory_ID");
+                int ordDaysToExpire = reader.GetOrdinal("Days_to_expire");
+                int ordCreatedAt = reader.GetOrdinal("Created_At");
+                int ordUpdatedAt = reader.GetOrdinal("Updated_At");
+                int ordReturnAt = reader.GetOrdinal("Return_At");
+
+                while (reader.Read())
                 {
-                    while (reader.Read())
+                    //ID
+                    Guid id = Guid.Empty;
+                    if (!reader.IsDBNull(ordId))
                     {
-                        var loan = new Loan
-                        {
-                            ID = Guid.Parse(reader["ID"].ToString() ?? Guid.Empty.ToString()),
-                            Days_to_expire = Convert.ToInt32(reader["days_to_expire"]),
-                            ClientID = Guid.Parse(reader["ClientID"].ToString() ?? Guid.Empty.ToString()),
-                            InventoryID = Guid.Parse(reader["InventoryID"].ToString() ?? Guid.Empty.ToString()),
-
-                            CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
-                            UpdatedAt = Convert.ToDateTime(reader["UpdatedAt"]),
-                            ReturnAt = Convert.ToDateTime(reader["ReturnAt"])
-                        };
-
-                        loans.Add(loan);
+                        var raw = reader.GetValue(ordId);
+                        if (raw is byte[] b) id = new Guid(b);
+                        else Guid.TryParse(raw.ToString(), out id);
                     }
+
+                    //Client_ID (Guid)
+                    Guid clientId = Guid.Empty;
+                    if (!reader.IsDBNull(ordClientId))
+                    {
+                        var raw = reader.GetValue(ordClientId);
+                        if (raw is byte[] b) clientId = new Guid(b);
+                        else Guid.TryParse(raw.ToString(), out clientId);
+                    }
+
+                    //Inventory_ID
+                    int inventoryId = 0;
+                    if (!reader.IsDBNull(ordInventoryId))
+                    {
+                        var raw = reader.GetValue(ordInventoryId);
+                        if (raw is long l) inventoryId = Convert.ToInt32(l);
+                        else if (raw is int i) inventoryId = i;
+                        else int.TryParse(raw.ToString(), out inventoryId);
+                    }
+
+                    //Days_to_expire
+                    int daysToExpire = 30;
+                    if (!reader.IsDBNull(ordDaysToExpire))
+                    {
+                        var raw = reader.GetValue(ordDaysToExpire);
+                        if (raw is long l2) daysToExpire = Convert.ToInt32(l2);
+                        else if (raw is int i2) daysToExpire = i2;
+                        else int.TryParse(raw.ToString(), out daysToExpire);
+                    }
+
+                    DateTime createdAt = reader.IsDBNull(ordCreatedAt) ? DateTime.MinValue : Convert.ToDateTime(reader.GetValue(ordCreatedAt));
+                    DateTime updatedAt = reader.IsDBNull(ordUpdatedAt) ? DateTime.MinValue : Convert.ToDateTime(reader.GetValue(ordUpdatedAt));
+                    DateTime returnAt  = reader.IsDBNull(ordReturnAt) ? DateTime.MinValue : Convert.ToDateTime(reader.GetValue(ordReturnAt));
+
+                    loans.Add(new Loan
+                    {
+                        ID = id,
+                        Client_ID = clientId,
+                        Inventory_ID = inventoryId,
+                        Days_to_expire = daysToExpire,
+                        Created_At = createdAt,
+                        Updated_At = updatedAt,
+                        Return_At = returnAt
+                    });
                 }
             }
 
@@ -76,12 +124,12 @@ namespace Storage
                         {
                             ID = Guid.Parse(reader["ID"].ToString() ?? Guid.Empty.ToString()),
                             Days_to_expire = Convert.ToInt32(reader["days_to_expire"]),
-                            ClientID = Guid.Parse(reader["ClientID"].ToString() ?? Guid.Empty.ToString()),
-                            InventoryID = Guid.Parse(reader["InventoryID"].ToString() ?? Guid.Empty.ToString()),
+                            Client_ID = Guid.Parse(reader["Client_ID"].ToString() ?? Guid.Empty.ToString()),
+                            Inventory_ID = Convert.ToInt32(reader["Inventory_ID"]),
 
-                            CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
-                            UpdatedAt = Convert.ToDateTime(reader["UpdatedAt"]),
-                            ReturnAt = Convert.ToDateTime(reader["ReturndAt"])
+                            Created_At = Convert.ToDateTime(reader["Created_At"]),
+                            Updated_At = Convert.ToDateTime(reader["Updated_At"]),
+                            Return_At = Convert.ToDateTime(reader["ReturndAt"])
                         };
                     }
                 }
@@ -95,21 +143,21 @@ namespace Storage
             var connection = DataBase.GetConnection();
             {
                 var query = @"UPDATE Loan
-                            SET days_to_expire = @days_to_expire, ClientID = @ClientID, InventoryID = @InventoryID,
-                            UpdatedAt = @UpdatedAt
+                            SET days_to_expire = @days_to_expire, Client_ID = @Client_ID, Inventory_ID = @Inventory_ID,
+                            Updated_At = @Updated_At
                             WHERE ID = @ID";
 
 
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@ID", loan.ID);
+                    command.Parameters.AddWithValue("@ID", loan.ID.ToString());
                     command.Parameters.AddWithValue("@days_to_expire", loan.Days_to_expire);
-                    command.Parameters.AddWithValue("@ClientID", loan.ClientID);
-                    command.Parameters.AddWithValue("@InventoryID", loan.InventoryID);
-                    command.Parameters.AddWithValue("@UpdatedAt", DateTime.Now);
+                    command.Parameters.AddWithValue("@Client_ID", loan.Client_ID.ToString());
+                    command.Parameters.AddWithValue("@Inventory_ID", loan.Inventory_ID);
+                    command.Parameters.AddWithValue("@Updated_At", DateTime.Now);
 
                     
-                    command.Parameters.AddWithValue("@UpdatedAt", DateTime.Now);
+                    command.Parameters.AddWithValue("@Updated_At", DateTime.Now);
 
                     command.ExecuteNonQuery();
                 }

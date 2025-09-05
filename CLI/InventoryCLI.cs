@@ -58,18 +58,23 @@ namespace CLI
             }
 
             Console.WriteLine("\n=== Inventário da Biblioteca ===");
-            var grouped = inventories.GroupBy(inv => inv.Catalog_ID);
+            var grouped = inventories.GroupBy(inv => new { inv.Catalog_ID, inv.Title });
 
             foreach (var group in grouped)
             {
-                var title = group.First().Title;
-                Console.WriteLine($"Livro: {title} (Catalog_ID: {group.Key})");
-                Console.WriteLine($"   Exemplares: {group.Count()}");
+                var title = group.Key.Title;
+                var catalogId = group.Key.Catalog_ID;
+                var inventoryIds = group.Select(inv => inv.ID).OrderBy(id => id).ToList();
+
+                Console.WriteLine($"Livro: {title}");
+                Console.WriteLine($"Catalog_ID: {catalogId}");
+                Console.WriteLine($"Exemplares: {inventoryIds.Count}");
+                Console.WriteLine($"Inventory IDs: {string.Join(", ", inventoryIds)}");
+                Console.WriteLine();
             }
         }
 
-
-
+        
         static void CreateInventory(InventoryService inventoryService, CatalogService catalogService)
         {
             try

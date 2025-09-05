@@ -1,4 +1,5 @@
 using Storage;
+using Domain;
 
 namespace Service
 {
@@ -13,7 +14,7 @@ namespace Service
 
         public List<Loan> GetAll()
         {
-            return (List<Loan>)_loanRepository.GetAll();
+            return _loanRepository.GetAll().ToList();
         }
 
         public Loan? GetById(Guid ID)
@@ -35,22 +36,23 @@ namespace Service
             return loan;
         }
 
-        public void Create(Guid clientID,Guid inventoryID, int days_to_expire)
+        public void CreateLoan(Guid client_ID, int inventory_ID, int days_to_expire)
         {
             var loan = new Loan
             {
                 ID = Guid.NewGuid(),
-                ClientID = Guid.NewGuid(),
-                InventoryID = Guid.NewGuid(),
-                CreatedAt = DateTime.Now,
-                Days_to_expire = days_to_expire
+                Client_ID = client_ID,
+                Inventory_ID = inventory_ID,
+                Days_to_expire = days_to_expire,
+                Created_At = DateTime.Now,
+                Updated_At = DateTime.Now,
+                Return_At = DateTime.Now.AddDays(days_to_expire)
             };
-
-            loan.ReturnAt = loan.CreatedAt.AddDays(loan.Days_to_expire);
 
             _loanRepository.Add(loan);
             Console.WriteLine("Empréstimo criado com sucesso!");
         }
+
 
         public void Update(Guid ID, int days_to_expire)
         {
@@ -59,11 +61,11 @@ namespace Service
             {
                 Console.WriteLine("Empréstimo não encontrado.");
                 return;
-            } //clientID e inventoryID não podem ser alterados pelo usuário, portanto, não deve estar em Update
+            } //client_ID e inventory_ID não podem ser alterados pelo usuário, portanto, não deve estar em Update
 
             existingloan.Days_to_expire = days_to_expire;
 
-            existingloan.UpdatedAt = DateTime.Now;
+            existingloan.Updated_At = DateTime.Now;
 
             _loanRepository.Update(existingloan);
             Console.WriteLine("Empréstimo atualizado com sucesso!");
@@ -80,11 +82,6 @@ namespace Service
 
             _loanRepository.Delete(ID);
             Console.WriteLine("Empréstimo removido com sucesso!");
-        }
-
-        internal void Update(int newDays)
-        {
-            throw new NotImplementedException();
         }
     }
 }

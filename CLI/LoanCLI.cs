@@ -1,8 +1,7 @@
 using Service;
-using Domain;
 using CLI.Helpers;
 
-//OBS: Ajustar Create e Update pois o usuário NÃO DEVE ter acesso a criação de ID, ClientID e InventoryID.
+//OBS: Ajustar Create e Update pois o usuário NÃO DEVE ter acesso a criação de ID, Client_ID e Inventory_ID.
 
 namespace CLI
 {
@@ -11,10 +10,11 @@ namespace CLI
         public static void Menu()
         {
             var loanService = new LoanService();
+            var inventoryService = new InventoryService();
 
             while (true)
             {
-                Console.WriteLine("\n===== Menu Gênero =====");
+                Console.WriteLine("\n===== Menu Empréstimos =====");
                 Console.WriteLine("1 - Listar Empréstimo");
                 Console.WriteLine("2 - Adicionar Empréstimo");
                 Console.WriteLine("3 - Procurar pelo ID do Empréstimo");
@@ -31,7 +31,7 @@ namespace CLI
                         ListLoan(loanService);
                         break;
                     case "2":
-                        CreateLoan(loanService);
+                        CreateLoan(loanService, inventoryService);
                         break;
                     case "3":
                         GetByIdLoan(loanService);
@@ -56,10 +56,23 @@ namespace CLI
             try
             {
                 var loans = loanService.GetAll();
-                Console.WriteLine("\n=== Lista de Empréstimos ===");
+                if (loans == null || loans.Count == 0)
+                {
+                    Console.WriteLine("Nenhum empréstimo cadastrado.");
+                    return;
+                }
+
+                Console.WriteLine("\n=== Empréstimos Registrados ===");
                 foreach (var loan in loans)
                 {
-                    Console.WriteLine($"{loan.ID} - ClientID: {loan.ClientID} - InventoryID: {loan.InventoryID} - Dias até expirar: {loan.Days_to_expire} - Data Empréstimo: {loan.CreatedAt}");
+                    Console.WriteLine($"\nID do Empréstimo: {loan.ID}");
+                    Console.WriteLine($"Cliente (ID): {loan.Client_ID}");
+                    Console.WriteLine($"Inventário (ID): {loan.Inventory_ID}");
+                    Console.WriteLine($"Data do Empréstimo: {loan.Created_At:dd/MM/yyyy}");
+                    Console.WriteLine($"Data de Devolução: {loan.Return_At:dd/MM/yyyy}");
+
+                    string status = loan.IsLate ? "Atrasado" : "Dentro do prazo";
+                    Console.WriteLine($"Status: {status}");
                 }
             }
             catch (Exception ex)
@@ -70,43 +83,63 @@ namespace CLI
             }
         }
 
-        static void CreateLoan(LoanService loanService)
+        static void CreateLoan(LoanService loanService, InventoryService inventoryService)
         {
-            try
+            var inventories = inventoryService.ListInventoriesWithCatalog();
+
+            if (!inventories.Any())
             {
-                var clientIDInput = PromptHelper.PromptRequired("ClientID: ");
-                if (!Guid.TryParse(clientIDInput, out Guid clientID))
-                {
-                    Console.WriteLine("ClientID inválido! Operação cancelada.");
-                    return;
-                }
-
-                var inventoryIDInput = PromptHelper.PromptRequired("InventoryID: ");
-                if (!Guid.TryParse(inventoryIDInput, out Guid inventoryID))
-                {
-                    Console.WriteLine("InventoryID inválido! Operação cancelada.");
-                    return;
-                }
-
-                var daysToExpire = PromptHelper.PromptInt("Dias para expiração: ");
-                if (daysToExpire <= 0)
-                {
-                    Console.WriteLine("Número de dias inválido! Operação cancelada.");
-                    return;
-                }
-
-                // Cria empréstimo
-                loanService.Create(clientID, inventoryID, daysToExpire);
-
-                Console.WriteLine("Empréstimo criado com sucesso!");
-                LogService.Write("INFO", $"Empréstimo criado: ClientID {clientID}, InventoryID {inventoryID}, Dias para expiração {daysToExpire}");
+                Console.WriteLine("Nenhum livro disponível no inventário.");
+                return;
             }
-            catch (Exception ex)
+
+            // Pega somente a primeira adição de exemplar para usar Inventory_ID
+            var grouped = inventories.GroupBy(inv => new { inv.Catalog_ID, inv.Title })
+                                    .Select(g => new
+                                    {
+                                        Catalog_ID = g.Key.Catalog_ID.ToString(),
+                                        Title = g.Key.Title,
+                                        Inventory_ID = g.First().ID,
+                                        Available = g.Count()
+                                    }).ToList();
+
+            Console.WriteLine("\n=== Livros disponíveis para empréstimo ===");
+            foreach (var item in grouped)
             {
-                Console.WriteLine("Erro ao criar empréstimo. Verifique os dados e tente novamente.");
-                LogService.Write("ERROR", $"Erro ao criar empréstimo: {ex.Message}");
-                LogHelper.Error($"StackTrace: {ex.StackTrace}");
+                Console.WriteLine($"Livro: {item.Title} | Catalog_ID: {item.Catalog_ID} | Inventory_ID: {item.Inventory_ID} | Disponíveis: {item.Available}");
             }
+
+            Console.WriteLine("\nDigite o Inventory_ID do livro que deseja emprestar:");
+            if (!int.TryParse(Console.ReadLine(), out int chosenId))
+            {
+                Console.WriteLine("ID inválido.");
+                return;
+            }
+
+            var selected = grouped.FirstOrDefault(i => i.Inventory_ID == chosenId);
+            if (selected == null)
+            {
+                Console.WriteLine("Livro não encontrado ou nenhum exemplar disponível.");
+                return;
+            }
+
+            if (selected.Available <= 0)
+            {
+                Console.WriteLine("Nenhum exemplar disponível para empréstimo.");
+                return;
+            }
+
+            Console.WriteLine("Digite o Client_ID (Guid) do cliente:");
+            if (!Guid.TryParse(Console.ReadLine(), out Guid clientId))
+            {
+                Console.WriteLine("Client_ID inválido.");
+                return;
+            }
+
+            // Cria Loan com 30 dias fixo
+            int daysToExpire = 30;
+            loanService.CreateLoan(clientId, selected.Inventory_ID, daysToExpire);
+            Console.WriteLine($"Empréstimo criado com sucesso para o livro '{selected.Title}'! Retorno em {daysToExpire} dias.");
         }
 
         static void GetByIdLoan(LoanService loanService)
@@ -114,20 +147,30 @@ namespace CLI
             try
             {
                 var idInput = PromptHelper.PromptRequired("ID do Empréstimo");
-                if (!Guid.TryParse(idInput, out Guid id))
+                if (!Guid.TryParse(idInput, out Guid ID))
                 {
                     Console.WriteLine("ID inválido!");
                     return;
                 }
 
-                var loan = loanService.GetById(id);
+                var loan = loanService.GetById(ID);
                 if (loan == null)
                 {
                     Console.WriteLine("Empréstimo não encontrado.");
                     return;
                 }
 
-                Console.WriteLine($"\nID: {loan.ID}\nClientID: {loan.ClientID}\nInventoryID: {loan.InventoryID}\nDias até expirar: {loan.Days_to_expire}\nData Empréstimo: {loan.CreatedAt}");
+                Console.WriteLine($"\nID: {loan.ID}");
+                Console.WriteLine($"Cliente: {loan.Client_ID}");
+                Console.WriteLine($"Inventário: {loan.Inventory_ID}");
+                Console.WriteLine($"Dias até expirar: {loan.Days_to_expire}");
+                Console.WriteLine($"Data do Empréstimo: {loan.Created_At}");
+                Console.WriteLine($"Data de Devolução: {loan.Return_At}");
+
+                if (loan.IsLate)
+                    Console.WriteLine("Status: Atrasado para devolução!");
+                else
+                    Console.WriteLine("Status: Dentro do prazo.");
             }
             catch (Exception ex)
             {
@@ -136,9 +179,6 @@ namespace CLI
                 LogHelper.Error($"StackTrace: {ex.StackTrace}");
             }
         }
-
-
-
         static void UpdateLoan(LoanService loanService)
         {
             try
