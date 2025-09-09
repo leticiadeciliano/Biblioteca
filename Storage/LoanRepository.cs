@@ -1,8 +1,7 @@
-using System;
 using Domain;
 using System.Data.SQLite;
-using System.Collections.Generic;
 using Biblioteca.Domain.Interfaces;
+using CLI.Helpers;
 
 namespace Storage
 {
@@ -16,10 +15,10 @@ namespace Storage
             string query = "INSERT INTO Loan (ID, Days_to_expire, Client_ID, Inventory_ID, Return_At, Created_At, Updated_At) VALUES (@ID, @Days_to_expire, @Client_ID, @Inventory_ID, @Return_At, @Created_At, @Updated_At)";
             using (var command = new SQLiteCommand(query, connection))
             {
-                command.Parameters.AddWithValue("@ID", loan.ToString());
+                command.Parameters.AddWithValue("@ID", GuidHelper.ToDb(loan.ID, asBlob: false));
                 command.Parameters.AddWithValue("@Days_to_expire", loan.Days_to_expire);
-                command.Parameters.AddWithValue("@Client_ID", loan.Client_ID);
-                command.Parameters.AddWithValue("@Inventory_ID", loan.Inventory_ID.ToString());
+                command.Parameters.AddWithValue("@Client_ID", GuidHelper.ToDb(loan.Client_ID, asBlob: false));
+                command.Parameters.AddWithValue("@Inventory_ID", loan.Inventory_ID);
                 command.Parameters.AddWithValue("@Return_At", loan.Return_At);
                 command.Parameters.AddWithValue("@Created_At", loan.Created_At);
                 command.Parameters.AddWithValue("@Updated_At", loan.Updated_At);
@@ -47,27 +46,19 @@ namespace Storage
                 int ordDaysToExpire = reader.GetOrdinal("Days_to_expire");
                 int ordCreatedAt = reader.GetOrdinal("Created_At");
                 int ordUpdatedAt = reader.GetOrdinal("Updated_At");
-                int ordReturnAt = reader.GetOrdinal("Return_At");
+                int ordReturnAt = reader.GetOrdinal("ReturnAt");
 
                 while (reader.Read())
                 {
                     //ID
                     Guid id = Guid.Empty;
                     if (!reader.IsDBNull(ordId))
-                    {
-                        var raw = reader.GetValue(ordId);
-                        if (raw is byte[] b) id = new Guid(b);
-                        else Guid.TryParse(raw.ToString(), out id);
-                    }
+                        id = GuidHelper.FromDb(reader.GetValue(ordId));
 
-                    //Client_ID (Guid)
+                    //Client_ID
                     Guid clientId = Guid.Empty;
                     if (!reader.IsDBNull(ordClientId))
-                    {
-                        var raw = reader.GetValue(ordClientId);
-                        if (raw is byte[] b) clientId = new Guid(b);
-                        else Guid.TryParse(raw.ToString(), out clientId);
-                    }
+                        clientId = GuidHelper.FromDb(reader.GetValue(ordClientId));
 
                     //Inventory_ID
                     int inventoryId = 0;
@@ -150,9 +141,9 @@ namespace Storage
 
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@ID", loan.ID.ToString());
+                    command.Parameters.AddWithValue("@ID", GuidHelper.ToDb(loan.Client_ID, asBlob: false));
                     command.Parameters.AddWithValue("@days_to_expire", loan.Days_to_expire);
-                    command.Parameters.AddWithValue("@Client_ID", loan.Client_ID.ToString());
+                    command.Parameters.AddWithValue("@Client_ID", GuidHelper.ToDb(loan.Client_ID, asBlob: false));
                     command.Parameters.AddWithValue("@Inventory_ID", loan.Inventory_ID);
                     command.Parameters.AddWithValue("@Updated_At", DateTime.Now);
 

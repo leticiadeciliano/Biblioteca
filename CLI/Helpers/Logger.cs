@@ -1,4 +1,3 @@
-using System;
 using Service;
 
 namespace CLI.Helpers

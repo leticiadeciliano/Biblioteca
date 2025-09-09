@@ -1,176 +1,24 @@
-[2025-08-29 16:02:50] ERROR
-[2025-08-29 16:02:50] StackTrace:    at System.Data.SQLite.SQLite3.Prepare(SQLiteConnection cnn, SQLiteCommand command, String strSql, SQLiteStatement previous, UInt32 timeoutMS, String& strRemain)
-   at System.Data.SQLite.SQLiteCommand.BuildNextCommand()
-   at System.Data.SQLite.SQLiteCommand.GetStatement(Int32 index)
-   at System.Data.SQLite.SQLiteDataReader.NextResult()
-   at System.Data.SQLite.SQLiteDataReader..ctor(SQLiteCommand cmd, CommandBehavior behave)
-   at System.Data.SQLite.SQLiteCommand.ExecuteReader(CommandBehavior behavior)
-   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery(CommandBehavior behavior)
-   at System.Data.SQLite.SQLiteCommand.ExecuteNonQuery()
-   at Storage.LoanRepository.Add(Loan loan) in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 27
-   at Service.LoanService.Create(Guid clientID, Guid inventoryID, Int32 days_to_expire) in /home/dev/Biblioteca/Service/LoanService.cs:line 51
-   at CLI.LoanCLI.CreateLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 99
-[2025-08-29 17:00:57] INFO
-[2025-08-29 17:01:00] ERROR
-[2025-08-29 17:01:01] StackTrace:    at System.Guid.GuidResult.SetFailure(ParseFailure failureKind)
-   at System.Guid.TryParseGuid(ReadOnlySpan`1 guidString, GuidResult& result)
-   at System.Guid.Parse(ReadOnlySpan`1 input)
-   at System.Guid.Parse(String input)
-   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 43
-   at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 16
-   at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
-[2025-08-29 17:30:58] ERROR
-[2025-08-29 17:30:58] StackTrace:    at System.Guid.GuidResult.SetFailure(ParseFailure failureKind)
-   at System.Guid.TryParseGuid(ReadOnlySpan`1 guidString, GuidResult& result)
-   at System.Guid.Parse(ReadOnlySpan`1 input)
-   at System.Guid.Parse(String input)
-   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 43
-   at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 16
-   at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
-[2025-08-29 17:31:14] ERROR
-[2025-08-29 17:31:14] StackTrace:    at System.Guid.GuidResult.SetFailure(ParseFailure failureKind)
-   at System.Guid.TryParseGuid(ReadOnlySpan`1 guidString, GuidResult& result)
-   at System.Guid.Parse(ReadOnlySpan`1 input)
-   at System.Guid.Parse(String input)
-   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 43
-   at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 16
-   at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
-[2025-08-29 17:36:51] ERROR
-[2025-08-29 17:36:51] StackTrace:    at System.Guid.GuidResult.SetFailure(ParseFailure failureKind)
-   at System.Guid.TryParseGuid(ReadOnlySpan`1 guidString, GuidResult& result)
-   at System.Guid.Parse(ReadOnlySpan`1 input)
-   at System.Guid.Parse(String input)
-   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 43
-   at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 16
-   at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
-[2025-08-29 17:48:36] ERROR
-[2025-08-29 17:48:36] StackTrace:    at System.Guid.GuidResult.SetFailure(ParseFailure failureKind)
-   at System.Guid.TryParseGuid(ReadOnlySpan`1 guidString, GuidResult& result)
-   at System.Guid.Parse(ReadOnlySpan`1 input)
-   at System.Guid.Parse(String input)
-   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 43
-   at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
-   at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 57
-[2025-09-03 16:34:35] ERROR
-[2025-09-03 16:34:35] StackTrace:    at System.Guid.GuidResult.SetFailure(ParseFailure failureKind)
-   at System.Guid.TryParseGuid(ReadOnlySpan`1 guidString, GuidResult& result)
-   at System.Guid.Parse(ReadOnlySpan`1 input)
-   at System.Guid.Parse(String input)
-   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 43
-   at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
-   at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 57
-[2025-09-03 16:41:37] ERROR
-[2025-09-03 16:41:37] StackTrace:    at System.Guid.GuidResult.SetFailure(ParseFailure failureKind)
-   at System.Guid.TryParseGuid(ReadOnlySpan`1 guidString, GuidResult& result)
-   at System.Guid.Parse(ReadOnlySpan`1 input)
-   at System.Guid.Parse(String input)
-   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 43
-   at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
-   at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 57
-[2025-09-03 16:41:49] ERROR
-[2025-09-03 16:41:49] StackTrace:    at System.Guid.GuidResult.SetFailure(ParseFailure failureKind)
-   at System.Guid.TryParseGuid(ReadOnlySpan`1 guidString, GuidResult& result)
-   at System.Guid.Parse(ReadOnlySpan`1 input)
-   at System.Guid.Parse(String input)
-   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 43
-   at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
-   at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 57
-[2025-09-04 17:35:01] ERROR
-[2025-09-04 17:35:01] StackTrace:    at System.Data.SQLite.SQLiteDataReader.VerifyType(Int32 i, DbType typ)
-   at System.Data.SQLite.SQLiteDataReader.GetInt32(Int32 i)
-   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 56
+[2025-09-08 21:19:23] ERROR
+[2025-09-08 21:19:23] StackTrace:    at System.Number.ThrowFormatException[TChar](ReadOnlySpan`1 value)
+   at System.String.System.IConvertible.ToInt32(IFormatProvider provider)
+   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 46
    at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
    at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
-[2025-09-04 17:39:57] ERROR
-[2025-09-04 17:39:57] StackTrace:    at System.Data.SQLite.SQLiteDataReader.VerifyType(Int32 i, DbType typ)
-   at System.Data.SQLite.SQLiteDataReader.GetInt32(Int32 i)
-   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 56
+[2025-09-08 21:25:03] ERROR
+[2025-09-08 21:25:03] StackTrace:    at System.Number.ThrowFormatException[TChar](ReadOnlySpan`1 value)
+   at System.String.System.IConvertible.ToInt32(IFormatProvider provider)
+   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 46
    at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
    at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
-[2025-09-04 17:40:10] ERROR
-[2025-09-04 17:40:10] StackTrace:    at System.Data.SQLite.SQLiteDataReader.VerifyType(Int32 i, DbType typ)
-   at System.Data.SQLite.SQLiteDataReader.GetInt32(Int32 i)
-   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 56
+[2025-09-08 21:25:44] ERROR
+[2025-09-08 21:25:44] StackTrace:    at System.Number.ThrowFormatException[TChar](ReadOnlySpan`1 value)
+   at System.String.System.IConvertible.ToInt32(IFormatProvider provider)
+   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 46
    at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
    at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
-[2025-09-04 17:45:06] ERROR
-[2025-09-04 17:45:06] StackTrace:    at System.Data.SQLite.SQLiteDataReader.VerifyType(Int32 i, DbType typ)
-   at System.Data.SQLite.SQLiteDataReader.GetInt32(Int32 i)
-   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 56
-   at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
-   at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
-[2025-09-04 17:45:16] ERROR
-[2025-09-04 17:45:16] StackTrace:    at System.Data.SQLite.SQLiteDataReader.VerifyType(Int32 i, DbType typ)
-   at System.Data.SQLite.SQLiteDataReader.GetInt32(Int32 i)
-   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 56
-   at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
-   at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
-[2025-09-04 17:53:17] ERROR
-[2025-09-04 17:53:17] StackTrace:    at System.Data.SQLite.SQLiteDataReader.VerifyType(Int32 i, DbType typ)
-   at System.Data.SQLite.SQLiteDataReader.GetInt32(Int32 i)
-   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 56
-   at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
-   at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
-[2025-09-04 20:46:35] ERROR
-[2025-09-04 20:46:35] StackTrace:    at System.Data.SQLite.SQLiteDataReader.VerifyType(Int32 i, DbType typ)
-   at System.Data.SQLite.SQLiteDataReader.GetInt32(Int32 i)
-   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 56
-   at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
-   at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
-[2025-09-04 21:06:52] ERROR
-[2025-09-04 21:06:52] StackTrace:    at System.Data.SQLite.SQLiteDataReader.VerifyType(Int32 i, DbType typ)
-   at System.Data.SQLite.SQLiteDataReader.GetInt32(Int32 i)
-   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 56
-   at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
-   at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
-[2025-09-04 21:10:24] INFO
-[2025-09-04 21:10:54] INFO
-[2025-09-04 21:15:22] ERROR
-[2025-09-04 21:15:22] StackTrace:    at System.Data.SQLite.SQLiteDataReader.VerifyType(Int32 i, DbType typ)
-   at System.Data.SQLite.SQLiteDataReader.GetInt32(Int32 i)
-   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 56
-   at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
-   at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
-[2025-09-04 21:37:31] ERROR
-[2025-09-04 21:37:31] StackTrace:    at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 67
-   at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
-   at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
-[2025-09-04 21:45:38] ERROR
-[2025-09-04 21:45:38] StackTrace:    at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 67
-   at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
-   at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
-[2025-09-04 21:47:17] ERROR
-[2025-09-04 21:47:17] StackTrace:    at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 67
-   at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
-   at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
-[2025-09-04 21:51:45] ERROR
-[2025-09-04 21:51:45] StackTrace:    at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 67
-   at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
-   at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
-[2025-09-04 21:51:46] ERROR
-[2025-09-04 21:51:46] StackTrace:    at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 67
-   at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
-   at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
-[2025-09-04 21:52:41] ERROR
-[2025-09-04 21:52:41] StackTrace:    at Storage.LoanRepository.ReadGuidSafe(SQLiteDataReader reader, Int32 ord) in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 92
-   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 54
-   at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
-   at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
-[2025-09-04 22:36:26] ERROR
-[2025-09-04 22:36:26] StackTrace:    at System.Data.SQLite.SQLiteDataReader.VerifyType(Int32 i, DbType typ)
-   at System.Data.SQLite.SQLiteDataReader.GetInt32(Int32 i)
-   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 71
-   at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
-   at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
-[2025-09-04 22:36:41] ERROR
-[2025-09-04 22:36:41] StackTrace:    at System.Data.SQLite.SQLiteDataReader.VerifyType(Int32 i, DbType typ)
-   at System.Data.SQLite.SQLiteDataReader.GetInt32(Int32 i)
-   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 71
-   at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
-   at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
-[2025-09-04 22:36:47] ERROR
-[2025-09-04 22:36:47] StackTrace:    at System.Data.SQLite.SQLiteDataReader.VerifyType(Int32 i, DbType typ)
-   at System.Data.SQLite.SQLiteDataReader.GetInt32(Int32 i)
-   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 71
+[2025-09-08 21:26:13] ERROR
+[2025-09-08 21:26:13] StackTrace:    at System.Number.ThrowFormatException[TChar](ReadOnlySpan`1 value)
+   at System.String.System.IConvertible.ToInt32(IFormatProvider provider)
+   at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 46
    at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
    at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
