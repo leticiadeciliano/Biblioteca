@@ -22,3 +22,17 @@
    at Storage.LoanRepository.GetAll() in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 46
    at Service.LoanService.GetAll() in /home/dev/Biblioteca/Service/LoanService.cs:line 17
    at CLI.LoanCLI.ListLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 58
+[2025-09-09 14:38:02] ERROR
+[2025-09-09 14:38:02] StackTrace:    at System.Data.SQLite.SQLiteDataReader.GetSQLiteType(SQLiteConnectionFlags flags, Int32 i)
+   at System.Data.SQLite.SQLiteDataReader.GetValue(Int32 i)
+   at System.Data.SQLite.SQLiteDataReader.get_Item(String name)
+   at Storage.LoanRepository.GetById(Guid ID) in /home/dev/Biblioteca/Storage/LoanRepository.cs:line 114
+   at Service.LoanService.GetById(Guid ID) in /home/dev/Biblioteca/Service/LoanService.cs:line 28
+   at CLI.LoanCLI.GetByIdLoan(LoanService loanService) in /home/dev/Biblioteca/CLI/LoanCLI.cs:line 156
+[2025-09-09 15:16:46] INFO
+[2025-09-09 15:26:33] INFO
+[2025-09-09 15:27:15] INFO
+[2025-09-09 15:31:38] INFO
+[2025-09-09 15:34:50] INFO
+[2025-09-09 15:53:27] INFO
+[2025-09-09 15:54:14] INFO

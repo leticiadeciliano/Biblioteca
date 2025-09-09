@@ -19,7 +19,7 @@ namespace Storage
                 command.Parameters.AddWithValue("@Days_to_expire", loan.Days_to_expire);
                 command.Parameters.AddWithValue("@Client_ID", GuidHelper.ToDb(loan.Client_ID, asBlob: false));
                 command.Parameters.AddWithValue("@Inventory_ID", loan.Inventory_ID);
-                command.Parameters.AddWithValue("@Return_At", loan.Return_At);
+                command.Parameters.AddWithValue("@Return_At", loan.Created_At.AddDays(loan.Days_to_expire)); //calculando diretament pelo banco
                 command.Parameters.AddWithValue("@Created_At", loan.Created_At);
                 command.Parameters.AddWithValue("@Updated_At", loan.Updated_At);
 
@@ -46,7 +46,7 @@ namespace Storage
                 int ordDaysToExpire = reader.GetOrdinal("Days_to_expire");
                 int ordCreatedAt = reader.GetOrdinal("Created_At");
                 int ordUpdatedAt = reader.GetOrdinal("Updated_At");
-                int ordReturnAt = reader.GetOrdinal("ReturnAt");
+                int ordReturn_At = reader.GetOrdinal("Return_At");
 
                 while (reader.Read())
                 {
@@ -82,7 +82,7 @@ namespace Storage
 
                     DateTime createdAt = reader.IsDBNull(ordCreatedAt) ? DateTime.MinValue : Convert.ToDateTime(reader.GetValue(ordCreatedAt));
                     DateTime updatedAt = reader.IsDBNull(ordUpdatedAt) ? DateTime.MinValue : Convert.ToDateTime(reader.GetValue(ordUpdatedAt));
-                    DateTime returnAt  = reader.IsDBNull(ordReturnAt) ? DateTime.MinValue : Convert.ToDateTime(reader.GetValue(ordReturnAt));
+                    DateTime returnAt  = reader.IsDBNull(ordReturn_At) ? DateTime.MinValue : Convert.ToDateTime(reader.GetValue(ordReturn_At));
 
                     loans.Add(new Loan
                     {
@@ -100,12 +100,18 @@ namespace Storage
             return loans;
         }
 
-        public Loan GetById(Guid ID)
+        public Loan GetById(Guid id)
         {
             var connection = DataBase.GetConnection();
+
+            if (connection.State != System.Data.ConnectionState.Open)
+                connection.Open();
+
+            using (var command = new SQLiteCommand(
+                "SELECT ID, Client_ID, Inventory_ID, Days_to_expire, Created_At, Updated_At, Return_At " +
+                "FROM Loan WHERE ID = @ID", connection))
             {
-                var command = new SQLiteCommand("SELECT * FROM Loan WHERE ID = @ID", connection);
-                command.Parameters.AddWithValue("@ID", ID.ToString());
+                command.Parameters.AddWithValue("@ID", id.ToString());
 
                 using (var reader = command.ExecuteReader())
                 {
@@ -114,19 +120,17 @@ namespace Storage
                         return new Loan
                         {
                             ID = Guid.Parse(reader["ID"].ToString() ?? Guid.Empty.ToString()),
-                            Days_to_expire = Convert.ToInt32(reader["days_to_expire"]),
                             Client_ID = Guid.Parse(reader["Client_ID"].ToString() ?? Guid.Empty.ToString()),
                             Inventory_ID = Convert.ToInt32(reader["Inventory_ID"]),
-
+                            Days_to_expire = Convert.ToInt32(reader["Days_to_expire"]),
                             Created_At = Convert.ToDateTime(reader["Created_At"]),
                             Updated_At = Convert.ToDateTime(reader["Updated_At"]),
-                            Return_At = Convert.ToDateTime(reader["ReturndAt"])
+                            Return_At = Convert.ToDateTime(reader["Return_At"])
                         };
                     }
                 }
             }
-
-            return null!;
+            return new Loan { ID = Guid.Empty };
         }
 
         public void Update(Loan loan)
@@ -135,19 +139,17 @@ namespace Storage
             {
                 var query = @"UPDATE Loan
                             SET days_to_expire = @days_to_expire, Client_ID = @Client_ID, Inventory_ID = @Inventory_ID,
-                            Updated_At = @Updated_At
+                            Return_At = @Return_At, Updated_At = @Updated_At
                             WHERE ID = @ID";
 
 
                 using (var command = new SQLiteCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@ID", GuidHelper.ToDb(loan.Client_ID, asBlob: false));
+                    command.Parameters.AddWithValue("@ID", GuidHelper.ToDb(loan.ID, asBlob: false));
                     command.Parameters.AddWithValue("@days_to_expire", loan.Days_to_expire);
                     command.Parameters.AddWithValue("@Client_ID", GuidHelper.ToDb(loan.Client_ID, asBlob: false));
                     command.Parameters.AddWithValue("@Inventory_ID", loan.Inventory_ID);
-                    command.Parameters.AddWithValue("@Updated_At", DateTime.Now);
-
-                    
+                    command.Parameters.AddWithValue("@Return_At", loan.Created_At.AddDays(loan.Days_to_expire));
                     command.Parameters.AddWithValue("@Updated_At", DateTime.Now);
 
                     command.ExecuteNonQuery();
